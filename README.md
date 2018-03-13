@@ -11,4 +11,5 @@ Thank you for your understanding.
 
 
 ## Package Contents
-
+* **Companies Component**  
+Component for creating Companies section on the site
