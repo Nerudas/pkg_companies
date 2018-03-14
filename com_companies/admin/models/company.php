@@ -311,7 +311,7 @@ class CompaniesModelCompany extends AdminModel
 				$db->updateObject('#__companies', $update, 'id');
 			}
 
-			return true;
+			return $id;
 		}
 
 		return false;
