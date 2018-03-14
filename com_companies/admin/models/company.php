@@ -81,7 +81,7 @@ class CompaniesModelCompany extends AdminModel
 
 			// Get Tags
 			$item->tags = new TagsHelper;
-			$item->tags->getTagIds($item->id, 'com_companies.item');
+			$item->tags->getTagIds($item->id, 'com_companies.company');
 
 		}
 
@@ -309,6 +309,14 @@ class CompaniesModelCompany extends AdminModel
 				$update->id    = $id;
 				$update->alias = 'id' . $id;
 				$db->updateObject('#__companies', $update, 'id');
+
+				$query = $db->getQuery(true)
+					->select('*')
+					->update('#__ucm_content')
+					->set($db->quoteName('core_alias') . ' = ' . $db->quote('id' . $id))
+					->where($db->quoteName('core_type_alias') . ' = ' . $db->quote('com_companies.company'))
+					->where($db->quoteName('core_content_item_id') . ' = ' . $id);
+				$db->setQuery($query)->execute();
 			}
 
 			return $id;

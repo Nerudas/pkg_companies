@@ -161,6 +161,18 @@ class com_CompaniesInstallerScript
 			->where($db->quoteName('type_alias') . ' = ' . $db->quote('com_companies.company'));
 		$db->setQuery($query)->execute();
 
+		// Remove tag_map
+		$query = $db->getQuery(true)
+			->delete($db->quoteName('#__contentitem_tag_map'))
+			->where($db->quoteName('type_alias') . ' = ' . $db->quote('com_companies.company'));
+		$db->setQuery($query)->execute();
+
+		// Remove ucm_content
+		$query = $db->getQuery(true)
+			->delete($db->quoteName('#__ucm_content'))
+			->where($db->quoteName('core_type_alias') . ' = ' . $db->quote('com_companies.company'));
+		$db->setQuery($query)->execute();
+
 		// Remove images
 		JFolder::delete(JPATH_ROOT . '/images/companies');
 
