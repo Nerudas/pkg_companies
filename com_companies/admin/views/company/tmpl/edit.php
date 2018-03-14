@@ -18,7 +18,7 @@ use Joomla\CMS\Factory;
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
 
-HTMLHelper::stylesheet('media/com_companies/css/company.min.css', array('version' => 'auto'));
+HTMLHelper::stylesheet('media/com_companies/css/admin-company.min.css', array('version' => 'auto'));
 
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('behavior.formvalidator');

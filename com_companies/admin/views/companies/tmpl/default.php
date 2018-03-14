@@ -20,6 +20,8 @@ HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
+HTMLHelper::stylesheet('media/com_companies/css/admin-companies.min.css', array('version' => 'auto'));
+
 $app       = Factory::getApplication();
 $doc       = Factory::getDocument();
 $user      = Factory::getUser();
