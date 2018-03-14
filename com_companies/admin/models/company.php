@@ -294,7 +294,6 @@ class CompaniesModelCompany extends AdminModel
 
 		if (parent::save($data))
 		{
-
 			$id = $this->getState($this->getName() . '.id');
 
 			// Save images
@@ -310,13 +309,20 @@ class CompaniesModelCompany extends AdminModel
 				$update->alias = 'id' . $id;
 				$db->updateObject('#__companies', $update, 'id');
 
+				$update             = new stdClass();
+				$update->core_alias = 'id' . $id;
+
 				$query = $db->getQuery(true)
-					->select('*')
-					->update('#__ucm_content')
-					->set($db->quoteName('core_alias') . ' = ' . $db->quote('id' . $id))
+					->select('core_content_id')
+					->from('#__ucm_content')
 					->where($db->quoteName('core_type_alias') . ' = ' . $db->quote('com_companies.company'))
 					->where($db->quoteName('core_content_item_id') . ' = ' . $id);
-				$db->setQuery($query)->execute();
+				$db->setQuery($query);
+				$update->core_content_id = $db->loadResult();
+				if ($update->core_content_id)
+				{
+					$db->updateObject('#__ucm_content', $update, 'core_content_id');
+				}
 			}
 
 			return $id;
