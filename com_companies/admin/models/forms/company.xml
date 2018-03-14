@@ -116,12 +116,8 @@
 			<field name="bank" type="text"
 				   label="COM_COMPANIES_COMPANY_REQUISITES_BANK"
 				   class="input-large"/>
-			<field name="corporate_account" type="text"
-				   label="COM_COMPANIES_COMPANY_REQUISITES_CORPORATE_ACCOUNT"
-				   class="input-large"/>
-			<field type="spacer"/>
-			<field name="owner" type="text"
-				   label="COM_COMPANIES_COMPANY_REQUISITES_OWNER"
+			<field name="CORRESPONDENT_ACCOUNT" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_CORRESPONDENT_ACCOUNT"
 				   class="input-large"/>
 		</fields>
 	</fieldset>
