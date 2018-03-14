@@ -150,7 +150,6 @@ class CompaniesModelCompanies extends ListModel
 		return $query;
 	}
 
-
 	/**
 	 * Gets an array of objects from the results of database query.
 	 *
