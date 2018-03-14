@@ -1,4 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<fieldset>
+		<field name="title" type="text"
+			   label="JGLOBAL_TITLE"
+			   description="JFIELD_TITLE_DESC"
+			   class="input-xxlarge input-large-text"
+			   size="40"
+			   required="true"/>
+		<field name="alias" type="ajaxalias"
+			   label="JGLOBAL_FIELD_AJAXALIAS_LABEL"
+			   hint="JGLOBAL_FIELD_AJAXALIAS_PLACEHOLDER"
+			   size="40"/>
+		<field name="about" type="editor"
+			   label="COM_COMPANIES_COMPANY_ABOUT"
+			   hint="COM_COMPANIES_COMPANY_ABOUT"
+			   filter="JComponentHelper::filterText"
+			   buttons="true"/>
+		<field name="tags" type="advtags"
+			   label="COM_COMPANIES_COMPANY_TAGS"
+			   multiple="true"/>
+		<field name="portfolio" type="ajaximage"
+			   multiple="true"
+			   unique="true"
+			   limit="10"
+			   text="true"
+			   label="COM_COMPANIES_COMPANY_PORTFOLIO"/>
+	</fieldset>
+	<fieldset name="global">
+		<field name="region" type="regions"
+			   label="JGLOBAL_FIELD_REGIONS_LABEL"
+			   description="JGLOBAL_FIELD_REGIONS_DESC"
+			   show_all="true"/>
+		<field name="state" type="list"
+			   label="JSTATUS"
+			   description="JFIELD_PUBLISHED_DESC"
+			   class="chzn-color-state"
+			   filter="intval"
+			   size="1"
+			   default="1">
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+			<option value="-2">JTRASHED</option>
+		</field>
+		<field name="access" type="accesslevel"
+			   label="JFIELD_ACCESS_LABEL"
+			   description="JFIELD_ACCESS_DESC"
+			   size="1"/>
+	</fieldset>
 
+	<fieldset name="images" label="COM_COMPANIES_COMPANY_IMAGES">
+		<field name="imagefolder" type="imagefolder" path="images/board/items"/>
+		<field name="header" type="ajaximage"
+			   filename="header"
+			   label="COM_COMPANIES_COMPANY_HEADER"
+			   noimage="media/com_companies/images/noheader.jpg"/>
+		<field name="logo" type="ajaximage"
+			   filename="logo"
+			   label="COM_COMPANIES_COMPANY_LOGO"/>
+	</fieldset>
+	<fieldset name="contacts" label="COM_COMPANIES_COMPANY_CONTACTS">
+		<fields name="contacts">
+			<field name="phones" type="phones"
+				   label="JGLOBAL_FIELD_PHONES_LABEL"
+				   description="JGLOBAL_FIELD_PHONES_DESC"
+				   limit="3"/>
+			<field name="email" type="email"
+				   label="JGLOBAL_EMAIL"
+				   size="30"
+				   validate="email"/>
+			<field name="site" type="text" label="COM_COMPANIES_COMPANY_SITE"/>
+			<field name="vk" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_VK"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="vk.com"/>
+			<field name="facebook" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_FB"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="facebook.com"/>
+			<field name="instagram" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_INST"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="instagram.com"/>
+			<field name="odnoklassniki" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_OK"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="ok.ru"/>
+		</fields>
+	</fieldset>
+
+	<fieldset name="requisites" label="COM_COMPANIES_COMPANY_REQUISITES">
+		<fields name="requisites">
+			<field name="legal_address" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_LEGAL_ADDRESS"
+				   class="input-xxlarge"/>
+			<field name="actual_address" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_ACTUAL_ADDRESS"
+				   class="input-xxlarge"/>
+			<field type="spacer"/>
+			<field name="inn" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_INN"
+				   class="input-large"/>
+			<field name="kpp" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_KPP"
+				   class="input-large"/>
+			<field name="ogrn" type="text"
+				   label="com_companies_company_requisites_ogrn"
+				   class="input-large"/>
+			<field type="spacer"/>
+			<field name="checking_account" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_CHECKING_ACCOUNT"
+				   class="input-xlarge"/>
+			<field name="bik" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_BIK"
+				   class="input-xlarge"/>
+			<field name="bank" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_BANK"
+				   class="input-large"/>
+			<field name="corporate_account" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_CORPORATE_ACCOUNT"
+				   class="input-large"/>
+			<field type="spacer"/>
+			<field name="owner" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_OWNER"
+				   class="input-large"/>
+		</fields>
+	</fieldset>
+
+	<fieldset name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
+		<fields name="attribs">
+			<field name="item_layout" type="componentlayout"
+				   label="JFIELD_ALT_LAYOUT_LABEL"
+				   description="JFIELD_ALT_COMPONENT_LAYOUT_DESCRIPTION"
+				   useglobal="true"
+				   extension="com_companies"
+				   view="company"/>
+		</fields>
+	</fieldset>
+
+	<fieldset name="publishingdata" label="">
+		<field name="created" type="calendar"
+			   label="JGLOBAL_FIELD_CREATED_LABEL"
+			   description="JGLOBAL_FIELD_FIELD_CACHETIME_DESC"
+			   translateformat="true"
+			   showtime="true"
+			   size="22"
+			   filter="user_utc"/>
+		<field name="created_by" type="user"
+			   label="COM_COMPANIES_COMPANY_CREATED_BY"
+			   description="JGLOBAL_FIELD_CREATED_BY_DESC"/>
+		<field name="hits" type="number"
+			   label="JGLOBAL_HITS"
+			   class="readonly"
+			   size="6"
+			   readonly="true"
+			   filter="unset"/>
+		<field name="id" type="text"
+			   label="JGLOBAL_FIELD_ID_LABEL"
+			   description="JGLOBAL_FIELD_ID_DESC"
+			   class="readonly"
+			   size="10"
+			   default="0"
+			   readonly="true"/>
+	</fieldset>
+
+	<fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+		<field name="metakey" type="textarea"
+			   label="JFIELD_META_KEYWORDS_LABEL"
+			   description="JFIELD_META_KEYWORDS_DESC"
+			   rows="3"
+			   cols="30"/>
+		<field name="metadesc" type="textarea"
+			   label="JFIELD_META_DESCRIPTION_LABEL"
+			   description="JFIELD_META_DESCRIPTION_DESC"
+			   rows="3"
+			   cols="30"/>
+
+		<fields name="metadata">
+			<field name="robots" type="list"
+				   label="JFIELD_METADATA_ROBOTS_LABEL"
+				   description="JFIELD_METADATA_ROBOTS_DESC">
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
+				<option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
+				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
+				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+			</field>
+
+			<field name="author" type="text"
+				   label="JAUTHOR"
+				   description="JFIELD_METADATA_AUTHOR_DESC"
+				   size="20"/>
+
+			<field name="rights" type="textarea"
+				   label="JFIELD_META_RIGHTS_LABEL"
+				   description="JFIELD_META_RIGHTS_DESC"
+				   filter="string"
+				   cols="30"
+				   rows="2"/>
+
+			<field name="xreference" type="text" label="JFIELD_METADATA_XREFERENCE_LABEL"
+				   description="JFIELD_METADATA_FIELD_XREFERENCE_DESC"
+				   size="20"/>
+		</fields>
+	</fieldset>
 </form>

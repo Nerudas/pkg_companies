@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Response\JsonResponse;
 
 class CompaniesControllerCompany extends FormController
 {
@@ -42,6 +43,27 @@ class CompaniesControllerCompany extends FormController
 			$helper = new imageFolderHelper('images/companies');
 			$helper->saveImagesValue($id, '#__companies', $field, $value);
 		}
+
+		$app->close();
+
+		return true;
+	}
+
+	/**
+	 * Method to update profile Images
+	 *
+	 * @return  boolean  True if successful, false otherwise.
+	 *
+	 * @since 1.0.0
+	 */
+	public function checkAlias()
+	{
+		$app   = Factory::getApplication();
+		$data  = $this->input->post->get('jform', array(), 'array');
+		$model = $this->getModel();
+		$check = $model->checkAlias($data['id'], $data['alias']);
+
+		echo new JsonResponse($check->data, $check->msg, ($check->status == 'error'));
 
 		$app->close();
 

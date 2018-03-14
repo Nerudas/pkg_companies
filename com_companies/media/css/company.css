@@ -1,0 +1,27 @@
+/*
+ * @package    Companies Component
+ * @version    1.0.0
+ * @author     Nerudas  - nerudas.ru
+ * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
+ * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
+ * @link       https://nerudas.ru
+ */
+
+#jform_header {
+	width: 100%;
+}
+
+#jform_header .form {
+	width: 100%;
+	max-height: 300px;
+	padding: 0;
+	overflow: hidden;
+	position: static;
+	margin-bottom: 52px;
+}
+
+#jform_header .form label a {
+	right: 0;
+	left: 0;
+	bottom: -43px;
+}
