@@ -28,7 +28,7 @@
 			   size="40"/>
 		<field name="list_layout" type="componentlayout"
 			   label="COM_COMPANIES_PARAMS_LIST_LAYOUT"
-			   extension="COM_COMPANIES"
+			   extension="com_companies"
 			   view="list"/>
 		<field name="company_layout" type="componentlayout"
 			   label="COM_COMPANIES_PARAMS_COMPANY_LAYOUT"

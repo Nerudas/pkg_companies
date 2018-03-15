@@ -122,6 +122,31 @@ class CompaniesModelCompanies extends ListModel
 	}
 
 	/**
+	 * Get the filter form
+	 *
+	 * @param   array   $data     data
+	 * @param   boolean $loadData load current data
+	 *
+	 * @return  \JForm|boolean  The \JForm object or false on error
+	 *
+	 * @since 1.0.0
+	 */
+	public function getFilterForm($data = array(), $loadData = true)
+	{
+		$component = ComponentHelper::getParams('com_companies');
+		if ($form = parent::getFilterForm())
+		{
+			// Set tags Filter
+			if ($component->get('profile_tags', 0))
+			{
+				$form->setFieldAttribute('tags', 'parents', implode(',', $component->get('company_tags')), 'filter');
+			}
+		}
+
+		return $form;
+	}
+
+	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
@@ -226,7 +251,6 @@ class CompaniesModelCompanies extends ListModel
 			}
 		}
 
-
 		// Group by
 		$query->group(array('c.id'));
 
@@ -255,32 +279,6 @@ class CompaniesModelCompanies extends ListModel
 		$this->getDbo()->setQuery($query, $limitstart, $limit);
 
 		return $this->getDbo()->loadObjectList('id');
-	}
-
-
-	/**
-	 * Get the filter form
-	 *
-	 * @param   array   $data     data
-	 * @param   boolean $loadData load current data
-	 *
-	 * @return  \JForm|boolean  The \JForm object or false on error
-	 *
-	 * @since 1.0.0
-	 */
-	public function getFilterForm($data = array(), $loadData = true)
-	{
-		$component = ComponentHelper::getParams('com_companies');
-		if ($form = parent::getFilterForm())
-		{
-			// Set tags Filter
-			if ($component->get('profile_tags', 0))
-			{
-				$form->setFieldAttribute('tags', 'parents', implode(',', $component->get('company_tags')), 'filter');
-			}
-		}
-
-		return $form;
 	}
 
 	/**

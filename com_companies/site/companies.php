@@ -10,3 +10,11 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+
+JLoader::register('CompaniesHelperRoute', JPATH_SITE . '/components/com_companies/helpers/route.php');
+
+$controller = BaseController::getInstance('Companies');
+$controller->execute(Factory::getApplication()->input->get('task'));
+$controller->redirect();

@@ -10,3 +10,192 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Component\Router\RouterView;
+use Joomla\CMS\Component\Router\RouterViewConfiguration;
+use Joomla\CMS\Component\Router\Rules\MenuRules;
+use Joomla\CMS\Component\Router\Rules\NomenuRules;
+use Joomla\CMS\Component\Router\Rules\StandardRules;
+
+
+class CompaniesRouter extends RouterView
+{
+	/**
+	 * Router constructor
+	 *
+	 * @param   JApplicationCms $app  The application object
+	 * @param   JMenu           $menu The menu object to work with
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct($app = null, $menu = null)
+	{
+		// List route
+		$list = new RouterViewConfiguration('list');
+		$list->setKey('key');
+		$this->registerView($list);
+
+		// Form route
+		$form = new RouterViewConfiguration('form');
+		$form->setKey('key')->setParent($list, 'key');
+		$this->registerView($form);
+
+		// Company route
+		$company = new RouterViewConfiguration('company');
+		$company->setKey('id')->setParent($list, 'key');
+		$this->registerView($company);
+
+		parent::__construct($app, $menu);
+
+		$this->attachRule(new MenuRules($this));
+		$this->attachRule(new StandardRules($this));
+		$this->attachRule(new NomenuRules($this));
+	}
+
+
+	/**
+	 * Method to get the segment(s) for list view
+	 *
+	 * @param   string $id    ID of the item to retrieve the segments for
+	 * @param   array  $query The request that is built right now
+	 *
+	 * @return  array|string  The segments of this item
+	 *
+	 * @since 1.0.0
+	 */
+	public function getListSegment($id, $query)
+	{
+		return array(1 => 1);
+	}
+
+
+	/**
+	 * Method to get the segment(s) for form view
+	 *
+	 * @param   string $id    ID of the form to retrieve the segments for
+	 * @param   array  $query The request that is built right now
+	 *
+	 * @return  array|string  The segments of this item
+	 *
+	 * @since  1.0.0
+	 */
+	public function getFormSegment($id, $query)
+	{
+		$name  = (!empty($query['id'])) ? 'edit' : 'add';
+
+		return array(1 => $name);
+	}
+
+	/**
+	 * Method to get the segment(s) for company view
+	 *
+	 * @param   string $id    ID of the item to retrieve the segments for
+	 * @param   array  $query The request that is built right now
+	 *
+	 * @return  array|string  The segments of this item
+	 *
+	 * @since 1.0.0
+	 */
+	public function getCompanySegment($id, $query)
+	{
+		if (!strpos($id, ':'))
+		{
+			$db      = Factory::getDbo();
+			$dbquery = $db->getQuery(true)
+				->select('alias')
+				->from('#__companies')
+				->where('id = ' . (int) $id);
+			$db->setQuery($dbquery);
+			$alias = $db->loadResult();
+
+			return array($id => $alias);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Method to get the id for a list view
+	 *
+	 * @param   string $segment Segment to retrieve the ID for
+	 * @param   array  $query   The request that is parsed right now
+	 *
+	 * @return  mixed   The id of this item or false
+	 *
+	 * @since 1.0.0
+	 */
+	public function getListId($segment, $query)
+	{
+		return 1;
+	}
+
+	/**
+	 * Method to get the id for form view
+	 *
+	 * @param   string $segment Segment to retrieve the ID for
+	 * @param   array  $query   The request that is parsed right now
+	 *
+	 * @return  mixed   The id of this item or false
+	 *
+	 * @since  1.0.0
+	 */
+	public function getFormId($segment, $query)
+	{
+		if (in_array($segment, array('form', 'add', 'edit')))
+		{
+			return 1;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Method to get the id for a company view
+	 *
+	 * @param   string $segment Segment to retrieve the ID for
+	 * @param   array  $query   The request that is parsed right now
+	 *
+	 * @return  mixed   The id of this item or false
+	 *
+	 * @since 1.0.0
+	 */
+	public function getCompanyId($segment, $query)
+	{
+		if (!empty($segment))
+		{
+			preg_match('/^id(.*)/', $segment, $matches);
+			$id = (!empty($matches[1])) ? (int) $matches[1] : 0;
+			if (!empty($id))
+			{
+				return $id;
+			}
+
+			$db      = Factory::getDbo();
+			$dbquery = $db->getQuery(true)
+				->select('id')
+				->from('#__companies')
+				->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
+			$db->setQuery($dbquery);
+
+			return (int) $db->loadResult();
+		}
+
+		return false;
+	}
+}
+
+function companiesBuildRoute(&$query)
+{
+	$app    = Factory::getApplication();
+	$router = new CompaniesRouter($app, $app->getMenu());
+
+	return $router->build($query);
+}
+
+function companiesParseRoute($segments)
+{
+	$app    = Factory::getApplication();
+	$router = new CompaniesRouter($app, $app->getMenu());
+
+	return $router->parse($segments);
+}
