@@ -10,3 +10,4 @@
 
 defined('_JEXEC') or die;
 
+echo '<pre>', print_r($this->item, true), '</pre>';
