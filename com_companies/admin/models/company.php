@@ -388,7 +388,8 @@ class CompaniesModelCompany extends AdminModel
 		}
 
 		// Check form
-		if (in_array($alias, array('form', 'edit', 'add'))) {
+		if (in_array($alias, array('form', 'edit', 'add')))
+		{
 			$response->status = 'error';
 			$response->msg    = Text::_('COM_COMPANIES_ERROR_ALIAS_EXIST');
 			$response->data   = $default_alias;

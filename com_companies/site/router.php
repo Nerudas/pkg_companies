@@ -78,7 +78,7 @@ class CompaniesRouter extends RouterView
 	 */
 	public function getFormSegment($id, $query)
 	{
-		$name  = (!empty($query['id'])) ? 'edit' : 'add';
+		$name = (!empty($query['id'])) ? 'edit' : 'add';
 
 		return array(1 => $name);
 	}

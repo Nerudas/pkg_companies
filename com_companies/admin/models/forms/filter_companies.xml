@@ -11,7 +11,7 @@
 		<field name="access" type="accesslevel" onchange="this.form.submit();">
 			<option value="">JOPTION_SELECT_ACCESS</option>
 		</field>
-		<field name="created_by" type="user" />
+		<field name="created_by" type="user"/>
 		<field name="region" type="regions"
 			   show_null="true"
 			   onchange="this.form.submit();"/>

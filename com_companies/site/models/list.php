@@ -269,7 +269,7 @@ class CompaniesModelList extends ListModel
 				}
 				$number = $this->clearPhoneNumber($search);
 				echo '<pre>', print_r($number, true), '</pre>';
-				$code   = '+7';
+				$code = '+7';
 				if (!empty($number))
 				{
 					$phone         = $code . $number;
