@@ -20,11 +20,12 @@
 			   label="COM_COMPANIES_COMPANY_TAGS"
 			   multiple="true"/>
 		<field name="portfolio" type="ajaximage"
+			   label="COM_COMPANIES_COMPANY_PORTFOLIO"
 			   multiple="true"
 			   unique="true"
 			   limit="10"
 			   text="true"
-			   label="COM_COMPANIES_COMPANY_PORTFOLIO"/>
+			   subfolder="portfolio" />
 	</fieldset>
 	<fieldset name="global">
 		<field name="region" type="regions"
@@ -49,7 +50,7 @@
 	</fieldset>
 
 	<fieldset name="images" label="COM_COMPANIES_COMPANY_IMAGES">
-		<field name="imagefolder" type="imagefolder" path="images/board/items"/>
+		<field name="imagefolder" type="imagefolder" path="images/companies"/>
 		<field name="header" type="ajaximage"
 			   label="COM_COMPANIES_COMPANY_HEADER"
 			   filename="header"

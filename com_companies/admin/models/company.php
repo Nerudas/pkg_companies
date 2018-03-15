@@ -148,9 +148,9 @@ class CompaniesModelCompany extends AdminModel
 		// Set update images links
 		$saveurl = Uri::base(true) . '/index.php?option=com_companies&task=company.updateImages&id='
 			. $id . '&field=';
-		$form->setFieldAttribute('logo', 'saveurl', $saveurl . 'avatar');
+		$form->setFieldAttribute('logo', 'saveurl', $saveurl . 'logo');
 		$form->setFieldAttribute('header', 'saveurl', $saveurl . 'header');
-		$form->setFieldAttribute('portfolio', 'saveurl', $saveurl . 'header');
+		$form->setFieldAttribute('portfolio', 'saveurl', $saveurl . 'portfolio');
 
 		// Set Tags parents
 		$config = ComponentHelper::getParams('com_companies');
