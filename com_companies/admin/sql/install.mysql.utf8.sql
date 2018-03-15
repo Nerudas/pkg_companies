@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS `#__companies` (
   `title`       VARCHAR(255)     NOT NULL DEFAULT '',
   `alias`       VARCHAR(400)     NOT NULL DEFAULT '',
   `about`       LONGTEXT         NOT NULL DEFAULT '',
-  `status`      VARCHAR(255)     NOT NULL DEFAULT '',
   `contacts`    MEDIUMTEXT       NOT NULL DEFAULT '',
   `requisites`  MEDIUMTEXT       NOT NULL DEFAULT '',
   `logo`        TEXT             NOT NULL DEFAULT '',

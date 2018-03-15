@@ -51,12 +51,13 @@
 	<fieldset name="images" label="COM_COMPANIES_COMPANY_IMAGES">
 		<field name="imagefolder" type="imagefolder" path="images/board/items"/>
 		<field name="header" type="ajaximage"
-			   filename="header"
 			   label="COM_COMPANIES_COMPANY_HEADER"
-			   noimage="media/com_companies/images/noheader.jpg"/>
+			   filename="header"
+			   noimage="media/com_companies/images/no-header.jpg"/>
 		<field name="logo" type="ajaximage"
+			   label="COM_COMPANIES_COMPANY_LOGO"
 			   filename="logo"
-			   label="COM_COMPANIES_COMPANY_LOGO"/>
+			   noimage="media/com_companies/images/no-logo.png"/>
 	</fieldset>
 	<fieldset name="contacts" label="COM_COMPANIES_COMPANY_CONTACTS">
 		<fields name="contacts">
@@ -142,8 +143,7 @@
 			   size="22"
 			   filter="user_utc"/>
 		<field name="created_by" type="user"
-			   label="COM_COMPANIES_COMPANY_CREATED_BY"
-			   description="JGLOBAL_FIELD_CREATED_BY_DESC"/>
+			   label="COM_COMPANIES_COMPANY_CREATED_BY"/>
 		<field name="hits" type="number"
 			   label="JGLOBAL_HITS"
 			   class="readonly"

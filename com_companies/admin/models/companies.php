@@ -11,6 +11,10 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\Uri\Uri;
 
 class CompaniesModelCompanies extends ListModel
 {
@@ -30,7 +34,6 @@ class CompaniesModelCompanies extends ListModel
 				'c.title', 'title',
 				'c.alias', 'alias',
 				'c.about', 'about',
-				'c.status', 'status',
 				'c.contacts', 'contacts',
 				'c.requisites', 'requisites',
 				'c.logo', 'logo',
@@ -71,16 +74,25 @@ class CompaniesModelCompanies extends ListModel
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
+		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->setState('filter.access', $access);
+
 		$region = $this->getUserStateFromRequest($this->context . '.filter.region', 'filter_region', '');
 		$this->setState('filter.region', $region);
+
+		$created_by = $this->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by', '');
+		$this->setState('filter.created_by', $created_by);
 
 		$tags = $this->getUserStateFromRequest($this->context . '.filter.tags', 'filter_tags', '');
 		$this->setState('filter.tags', $tags);
 
 		// List state information.
-
 		$ordering  = empty($ordering) ? 'c.created' : $ordering;
 		$direction = empty($direction) ? 'desc' : $direction;
+
 		parent::populateState($ordering, $direction);
 	}
 
@@ -100,6 +112,9 @@ class CompaniesModelCompanies extends ListModel
 	protected function getStoreId($id = '')
 	{
 		$id .= ':' . $this->getState('filter.search');
+		$id .= ':' . $this->getState('filter.access');
+		$id .= ':' . $this->getState('filter.published');
+		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . serialize($this->getState('filter.tags'));
 
@@ -119,12 +134,36 @@ class CompaniesModelCompanies extends ListModel
 		$query = $db->getQuery(true)
 			->select('c.*')
 			->from($db->quoteName('#__companies', 'c'));
+		// Join over the users for the author.
+		$query->select('ua.name AS owner_name')
+			->join('LEFT', '#__users AS ua ON ua.id = c.created_by');
+
+		// Join over the asset groups.
+		$query->select('ag.title AS access_level')
+			->join('LEFT', '#__viewlevels AS ag ON ag.id = c.access');
 
 		// Join over the regions.
 		$query->select(array('r.id as region_id', 'r.name AS region_name'))
 			->join('LEFT', '#__regions AS r ON r.id = 
 					(CASE c.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE c.region END)');
 
+		// Filter by access level.
+		$access = $this->getState('filter.access');
+		if (is_numeric($access))
+		{
+			$query->where('c.access = ' . (int) $access);
+		}
+
+		// Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published))
+		{
+			$query->where('c.state = ' . (int) $published);
+		}
+		elseif ($published === '')
+		{
+			$query->where('(c.state = 0 OR c.state = 1)');
+		}
 
 		// Filter by regions
 		$region = $this->getState('filter.region');
@@ -138,6 +177,55 @@ class CompaniesModelCompanies extends ListModel
 			$regions     = array_unique($regions);
 			$query->where($db->quoteName('c.region') . ' IN (' . implode(',', $regions) . ')');
 		}
+
+		// Filter by tags.
+		$tags = $this->getState('filter.tags');
+		if (is_array($tags))
+		{
+			$tags = ArrayHelper::toInteger($tags);
+			$tags = implode(',', $tags);
+			if (!empty($tags))
+			{
+				$query->join('LEFT', $db->quoteName('#__contentitem_tag_map', 'tagmap')
+					. ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('c.id')
+					. ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_companies.company'))
+					->where($db->quoteName('tagmap.tag_id') . ' IN (' . $tags . ')');
+			}
+		}
+
+		// Filter by search.
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('c.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$text_columns = array('c.title', 'c.about', 'c.contacts', 'c.requisites', 'c.tags_search', 'r.name', 'ua.name');
+
+				$sql = array();
+				foreach ($text_columns as $column)
+				{
+					$sql[] = $db->quoteName($column) . ' LIKE '
+						. $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+				}
+				$number = $this->clearPhoneNumber($search);
+				$code   = '+7';
+				if (!empty($number))
+				{
+					$phone         = $code . $number;
+					$phone_columns = array('c.contacts');
+					foreach ($phone_columns as $column)
+					{
+						$sql[] = $column . ' LIKE ' . $db->quote('%' . $phone . '%');
+					}
+				}
+				$query->where('(' . implode(' OR ', $sql) . ')');
+			}
+		}
+
 
 		// Group by
 		$query->group(array('c.id'));
@@ -169,5 +257,83 @@ class CompaniesModelCompanies extends ListModel
 		return $this->getDbo()->loadObjectList('id');
 	}
 
+
+	/**
+	 * Get the filter form
+	 *
+	 * @param   array   $data     data
+	 * @param   boolean $loadData load current data
+	 *
+	 * @return  \JForm|boolean  The \JForm object or false on error
+	 *
+	 * @since 1.0.0
+	 */
+	public function getFilterForm($data = array(), $loadData = true)
+	{
+		$component = ComponentHelper::getParams('com_companies');
+		if ($form = parent::getFilterForm())
+		{
+			// Set tags Filter
+			if ($component->get('profile_tags', 0))
+			{
+				$form->setFieldAttribute('tags', 'parents', implode(',', $component->get('company_tags')), 'filter');
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Method to get an array of data items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since 1.0.0
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		if (!empty($items))
+		{
+			foreach ($items as &$item)
+			{
+				$item->logo = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
+					Uri::root(true) . '/' . $item->logo : false;
+
+				// Get Tags
+				$item->tags = new TagsHelper;
+				$item->tags->getItemTags('com_companies.company', $item->id);
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Clear phone number
+	 *
+	 * @param  string $number Phone number
+	 *
+	 * @return string
+	 *
+	 * @since 1.0.0
+	 */
+	public function clearPhoneNumber($number)
+	{
+		if (mb_strlen($number) > 10)
+		{
+			$number = str_replace(array('+7'), '', $number);
+			$number = preg_replace('/\D/', '', $number);
+
+		}
+		if (mb_strlen($number) > 10 && mb_substr($number, 0, 1) == 8)
+		{
+			$number = mb_substr($number, 1);
+		}
+		$number = (int) $number;
+
+		return $number;
+	}
 
 }

@@ -10,3 +10,11 @@
 #system-message-container {
 	width: 100%;
 }
+
+#adminForm .logo {
+	height: 20px;
+}
+
+#adminForm td {
+	vertical-align: middle;
+}

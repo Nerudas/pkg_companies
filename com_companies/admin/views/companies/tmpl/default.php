@@ -18,6 +18,8 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', '.multipleTags', null,
+	array('placeholder_text_multiple' => Text::_('COM_COMPANIES_COMPANY_TAGS')));
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 HTMLHelper::stylesheet('media/com_companies/css/admin-companies.min.css', array('version' => 'auto'));
@@ -29,7 +31,7 @@ $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 
-$columns = 6;
+$columns = 11;
 
 ?>
 
@@ -54,11 +56,14 @@ $columns = 6;
 				<th style="min-width:100px" class="nowrap">
 					<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'c.title', $listDirn, $listOrder); ?>
 				</th>
+				<th width="10%" class="nowrap hidden-phone center">
+					<?php echo Text::_('COM_COMPANIES_COMPANY_LOGO'); ?>
+				</th>
 				<th width="10%" class="nowrap hidden-phone">
 					<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'c.access', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('searchtools.sort', 'JAUTHOR', 'c.created_by', $listDirn, $listOrder); ?>
+					<?php echo HTMLHelper::_('searchtools.sort', 'COM_COMPANIES_COMPANY_CREATED_BY', 'c.created_by', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap hidden-phone">
 					<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_REGION', 'region_name', $listDirn, $listOrder); ?>
@@ -67,7 +72,7 @@ $columns = 6;
 					<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_CREATED_DATE', 'c.created', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'c.hits', $listDirn, $listOrder); ?>
+					<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_HITS', 'c.hits', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" class="nowrap hidden-phone center">
 					<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'c.id', $listDirn, $listOrder); ?>
@@ -117,8 +122,12 @@ $columns = 6;
 							<?php else : ?>
 								<?php echo $this->escape($item->title); ?>
 							<?php endif; ?>
-
 						</div>
+					</td>
+					<td class="center">
+						<?php if ($item->logo): ?>
+							<img src="<?php echo $item->logo; ?>" alt="<?php echo $item->title; ?>" class="logo">
+						<?php endif; ?>
 					</td>
 					<td class="small hidden-phone">
 						<?php echo $this->escape($item->access_level); ?>
@@ -127,8 +136,8 @@ $columns = 6;
 						<?php if ((int) $item->created_by != 0) : ?>
 							<a class="hasTooltip"
 							   href="<?php echo Route::_('index.php?option=com_users&task=user.edit&id=' . (int) $item->created_by); ?>"
-							   title="<?php echo JText::_('JAUTHOR'); ?>">
-								<?php echo $this->escape($item->author_name); ?></a>
+							   title="<?php echo Text::_('COM_COMPANIES_COMPANY_CREATED_BY'); ?>">
+								<?php echo $this->escape($item->owner_name); ?></a>
 						<?php endif; ?>
 					</td>
 					<td class="small hidden-phone nowrap">

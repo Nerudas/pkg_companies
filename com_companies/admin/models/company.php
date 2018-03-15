@@ -387,6 +387,15 @@ class CompaniesModelCompany extends AdminModel
 			return $response;
 		}
 
+		// Check form
+		if (in_array($alias, array('form', 'edit', 'add'))) {
+			$response->status = 'error';
+			$response->msg    = Text::_('COM_COMPANIES_ERROR_ALIAS_EXIST');
+			$response->data   = $default_alias;
+
+			return $response;
+		}
+
 		// Check idXXX
 		preg_match('/^id(.*)/', $alias, $matches);
 		$idFromAlias = (!empty($matches[1])) ? $matches[1] : false;
@@ -437,6 +446,7 @@ class CompaniesModelCompany extends AdminModel
 
 			return $response;
 		}
+
 
 		$table = $this->getTable();
 		$table->load(array('alias' => $alias));
