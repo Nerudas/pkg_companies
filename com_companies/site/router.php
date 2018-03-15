@@ -17,7 +17,6 @@ use Joomla\CMS\Component\Router\Rules\MenuRules;
 use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
 
-
 class CompaniesRouter extends RouterView
 {
 	/**
@@ -52,7 +51,6 @@ class CompaniesRouter extends RouterView
 		$this->attachRule(new NomenuRules($this));
 	}
 
-
 	/**
 	 * Method to get the segment(s) for list view
 	 *
@@ -67,7 +65,6 @@ class CompaniesRouter extends RouterView
 	{
 		return array(1 => 1);
 	}
-
 
 	/**
 	 * Method to get the segment(s) for form view
