@@ -121,7 +121,7 @@ class CompaniesModelCompany extends ItemModel
 
 				$db->setQuery($query);
 				$data = $db->loadObject();
-				
+
 				if (empty($data))
 				{
 					$app->redirect($url = $errorRedirect, $msg = $errorMsg, $msgType = 'error', $moved = true);
