@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<metadata>
+	<layout title="COM_COMPANIES_VIEW_COMPANY" option="COM_COMPANIES_VIEW_COMPANY_DEFAULT_OPTION">
+		<message>
+			<![CDATA[COM_COMPANIES_VIEW_COMPANY_DESCRIPTION]]>
+		</message>
+	</layout>
 
-</form>
+	<fields name="request" addfieldpath="/administrator/components/com_profiles/models/fields">
+		<fieldset name="request">
+			<field name="id" type="sql"
+				   label="COM_COMPANIES_COMPANY"
+				   query="SELECT id, name FROM #__companies"
+				   key_field="id"
+				   value_field="name"
+				   required="true">
+				<option value="">JNONE</option>
+			</field>
+		</fieldset>
+	</fields>
+
+	<fields name="params">
+	</fields>
+</metadata>
