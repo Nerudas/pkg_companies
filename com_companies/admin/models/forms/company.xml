@@ -118,7 +118,7 @@
 			<field name="bank" type="text"
 				   label="COM_COMPANIES_COMPANY_REQUISITES_BANK"
 				   class="input-large"/>
-			<field name="CORRESPONDENT_ACCOUNT" type="text"
+			<field name="correspondent_account" type="text"
 				   label="COM_COMPANIES_COMPANY_REQUISITES_CORRESPONDENT_ACCOUNT"
 				   class="input-large"/>
 		</fields>
