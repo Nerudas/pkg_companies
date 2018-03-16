@@ -296,21 +296,27 @@ class CompaniesModelCompany extends AdminModel
 		{
 			$id = $this->getState($this->getName() . '.id');
 
+			$data['logo']      = (!empty($data['logo'])) ? $data['logo'] : '';
+			$data['header']    = (!empty($data['header'])) ? $data['header'] : '';
+			$data['portfolio'] = (!empty($data['portfolio'])) ? $data['portfolio'] : '';
+
 			// Save images
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'logo', $data['logo']);
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'header', $data['header']);
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'portfolio', $data['portfolio']);
 
 			// Fix alias
-			if ($data['alias'] == 'id0')
+			if ($data['alias'] == 'id0' || $data['alias'] == 'id')
 			{
+				$alias = $this->checkAlias($id, $data['alias'])->data;
+
 				$update        = new stdClass();
 				$update->id    = $id;
-				$update->alias = 'id' . $id;
+				$update->alias = $alias;
 				$db->updateObject('#__companies', $update, 'id');
 
 				$update             = new stdClass();
-				$update->core_alias = 'id' . $id;
+				$update->core_alias = $alias;
 
 				$query = $db->getQuery(true)
 					->select('core_content_id')
