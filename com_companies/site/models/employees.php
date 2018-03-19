@@ -108,7 +108,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 			if (!$user->authorise('core.admin'))
 			{
 				$groups = implode(',', $user->getAuthorisedViewLevels());
-				$query->where('c.access IN (' . $groups . ')')
+				$query->where('p.access IN (' . $groups . ')')
 					->where('( p.state = 1  OR ( p.id = ' . $user->id . ' AND p.state IN (0,1)))');;
 			}
 
