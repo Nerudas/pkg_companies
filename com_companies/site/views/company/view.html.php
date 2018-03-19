@@ -53,6 +53,17 @@ class CompaniesViewCompany extends HtmlView
 	 */
 	protected $user;
 
+
+	/**
+	 * Current company employees;
+	 *
+	 * @var    array
+	 *
+	 * @since 1.0.0
+	 */
+	protected $employees;
+
+
 	/**
 	 * Display the view
 	 *
@@ -70,11 +81,12 @@ class CompaniesViewCompany extends HtmlView
 		$user       = Factory::getUser();
 		$dispatcher = JEventDispatcher::getInstance();
 
-		$this->item     = $this->get('Item');
-		$this->link     = $this->item->link;
-		$this->editLink = $this->item->editLink;
-		$this->state    = $this->get('State');
-		$this->user     = $user;
+		$this->item      = $this->get('Item');
+		$this->link      = $this->item->link;
+		$this->editLink  = $this->item->editLink;
+		$this->employees = $this->get('Employees');
+		$this->state     = $this->get('State');
+		$this->user      = $user;
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

@@ -19,6 +19,7 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class CompaniesModelCompany extends ItemModel
 {
@@ -235,5 +236,25 @@ class CompaniesModelCompany extends ItemModel
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to get company employees
+	 *
+	 * @param int $pk Company ID
+	 *
+	 * @return  array
+	 *
+	 * @since 1.0.0
+	 */
+	public function getEmployees($pk = null)
+	{
+
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState('company.id');
+
+		$model = BaseDatabaseModel::getInstance('Employees', 'CompaniesModel', array('ignore_request' => true));
+		$model->setState('company.id', $pk);
+
+		return $model->getItems();
 	}
 }

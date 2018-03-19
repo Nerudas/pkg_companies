@@ -199,7 +199,7 @@ class CompaniesModelList extends ListModel
 			->join('LEFT', '#__regions AS r ON r.id = 
 					(CASE c.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE c.region END)');
 
-		// Filter by access level on categories.
+		// Filter by access level
 		if (!$user->authorise('core.admin'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
