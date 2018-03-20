@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS `#__companies` (
   AUTO_INCREMENT = 0;
 
 CREATE TABLE IF NOT EXISTS `#__companies_employees` (
-  `user_id`    INT(10)      NOT NULL,
   `company_id` INT(11)      NOT NULL,
+  `user_id`    INT(10)      NOT NULL,
   `position`   VARCHAR(255) NOT NULL DEFAULT '',
   `as_company` TINYINT(3)   NOT NULL DEFAULT '0',
   `key`        TEXT         NOT NULL DEFAULT '',

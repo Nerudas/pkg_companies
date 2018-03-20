@@ -10,3 +10,45 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Factory;
+
+$app = Factory::getApplication();
+$doc = Factory::getDocument();
+
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('formbehavior.chosen', 'select');
+
+$doc->addScriptDeclaration('
+	Joomla.submitbutton = function(task)
+	{
+		if (task == "company.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
+		{
+			Joomla.submitform(task, document.getElementById("item-form"));
+		}
+	};
+');
+?>
+<form action="<?php echo Route::_('index.php?option=com_companies&view=list&id=' . $this->item->id); ?>"
+	  method="post"
+	  name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+	<?php echo $this->form->renderField('title'); ?>
+	<?php echo $this->form->renderField('alias'); ?>
+	<?php echo $this->form->renderField('about'); ?>
+	<?php echo $this->form->renderField('tags'); ?>
+	<?php echo $this->form->renderFieldSet('images'); ?>
+	<?php echo $this->form->renderFieldSet('contacts'); ?>
+	<?php echo $this->form->renderFieldSet('requisites'); ?>
+	<?php echo $this->form->renderField('portfolio'); ?>
+	<?php echo $this->form->renderFieldSet('hidden'); ?>
+
+	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="return" value="<?php echo $app->input->getCmd('return'); ?>"/>
+	<?php echo HTMLHelper::_('form.token'); ?>
+
+	<button onclick="Joomla.submitbutton('company.save');"><?php echo Text::_('JAPPLY'); ?></button>
+	<button onclick="Joomla.submitbutton('company.cancel');"><?php echo Text::_('JCANCEL'); ?></button>
+</form>

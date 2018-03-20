@@ -26,6 +26,14 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 	protected $_items = null;
 
 	/**
+	 * Permission for companies items
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_canEditItems = array();
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -129,5 +137,38 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		}
 
 		return $this->_items;
+	}
+
+	/**
+	 * Method to check edit permission for company item
+	 *
+	 * @param  int    $company_id Company ID
+	 * @param  int    $user_id    User ID
+	 * @param  string $asset      Asset name
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function canEditItem($company_id = null, $user_id = null, $asset)
+	{
+		if (!isset($this->_canEditItems[$asset]))
+		{
+			$company_id = (!empty($company_id)) ? $company_id : $this->getState('company.id');
+			$user_id    = (!empty($user_id)) ? $user_id : Factory::getUser()->id;
+
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select('user_id')
+				->from('#__companies_employees')
+				->where('company_id = ' . (int) $company_id)
+				->where('user_id = ' . (int) $user_id)
+				->where($db->quoteName('key') . ' = ' . $db->quote(''));
+			$db->setQuery($query);
+
+			$this->_canEditItems[$asset] = (!empty($db->loadResult()));
+		}
+
+		return $this->_canEditItems[$asset];
 	}
 }

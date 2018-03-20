@@ -1,4 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<fieldset>
+		<field name="title" type="text"
+			   label="JGLOBAL_TITLE"
+			   description="JFIELD_TITLE_DESC"
+			   class="input-xxlarge input-large-text"
+			   size="40"
+			   required="true"/>
+		<field name="alias" type="ajaxalias"
+			   label="JGLOBAL_FIELD_AJAXALIAS_LABEL"
+			   hint="JGLOBAL_FIELD_AJAXALIAS_PLACEHOLDER"
+			   size="40"/>
+		<field name="about" type="editor"
+			   label="COM_COMPANIES_COMPANY_ABOUT"
+			   hint="COM_COMPANIES_COMPANY_ABOUT"
+			   filter="JComponentHelper::filterText"
+			   buttons="true"/>
+		<field name="tags" type="advtags"
+			   label="COM_COMPANIES_COMPANY_TAGS"
+			   multiple="true"/>
+		<field name="portfolio" type="ajaximage"
+			   label="COM_COMPANIES_COMPANY_PORTFOLIO"
+			   multiple="true"
+			   unique="true"
+			   limit="10"
+			   text="true"
+			   subfolder="portfolio" />
+	</fieldset>
+
+	<fieldset name="images" label="COM_COMPANIES_COMPANY_IMAGES">
+		<field name="imagefolder" type="imagefolder" path="images/companies"/>
+		<field name="header" type="ajaximage"
+			   label="COM_COMPANIES_COMPANY_HEADER"
+			   filename="header"
+			   noimage="media/com_companies/images/no-header.jpg"/>
+		<field name="logo" type="ajaximage"
+			   label="COM_COMPANIES_COMPANY_LOGO"
+			   filename="logo"
+			   noimage="media/com_companies/images/no-logo.png"/>
+	</fieldset>
+	<fieldset name="contacts" label="COM_COMPANIES_COMPANY_CONTACTS">
+		<fields name="contacts">
+			<field name="phones" type="phones"
+				   label="JGLOBAL_FIELD_PHONES_LABEL"
+				   description="JGLOBAL_FIELD_PHONES_DESC"
+				   limit="3"/>
+			<field name="email" type="email"
+				   label="JGLOBAL_EMAIL"
+				   size="30"
+				   validate="email"/>
+			<field name="site" type="text" label="COM_COMPANIES_COMPANY_SITE"/>
+			<field name="vk" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_VK"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="vk.com"/>
+			<field name="facebook" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_FB"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="facebook.com"/>
+			<field name="instagram" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_INST"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="instagram.com"/>
+			<field name="odnoklassniki" type="social"
+				   label="JGLOBAL_FIELD_SOCIAL_LABEL_OK"
+				   description="JGLOBAL_FIELD_SOCIAL_DESC"
+				   network="ok.ru"/>
+		</fields>
+	</fieldset>
+
+	<fieldset name="requisites" label="COM_COMPANIES_COMPANY_REQUISITES">
+		<fields name="requisites">
+			<field name="legal_address" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_LEGAL_ADDRESS"
+				   class="input-xxlarge"/>
+			<field name="actual_address" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_ACTUAL_ADDRESS"
+				   class="input-xxlarge"/>
+			<field type="spacer"/>
+			<field name="inn" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_INN"
+				   class="input-large"/>
+			<field name="kpp" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_KPP"
+				   class="input-large"/>
+			<field name="ogrn" type="text"
+				   label="com_companies_company_requisites_ogrn"
+				   class="input-large"/>
+			<field type="spacer"/>
+			<field name="checking_account" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_CHECKING_ACCOUNT"
+				   class="input-xlarge"/>
+			<field name="bik" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_BIK"
+				   class="input-xlarge"/>
+			<field name="bank" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_BANK"
+				   class="input-large"/>
+			<field name="correspondent_account" type="text"
+				   label="COM_COMPANIES_COMPANY_REQUISITES_CORRESPONDENT_ACCOUNT"
+				   class="input-large"/>
+		</fields>
+	</fieldset>
+
+	<fieldset name="hidden">
+		<field name="region" type="hidden"/>
+		<field name="state" type="hidden" default="1"/>
+		<field name="access" type="hidden" readonly="true"/>
+		<fields name="attribs">
+			<field name="company_layout" type="hidden" readonly="true" useglobal="true"/>
+		</fields>
+		<field name="created" type="hidden" readonly="true"/>
+		<field name="created_by" type="hidden" readonly="true"/>
+		<field name="hits" type="hidden" readonly="true"/>
+		<field name="id" type="hidden" default="0" readonly="true"/>
+		<field name="category" type="hidden" default="0"/>
+		<field name="metakey" type="hidden" readonly="true"/>
+		<field name="metadesc" type="hidden" readonly="true"/>
+		<fields name="metadata">
+			<field name="robots" type="hidden" readonly="true"/>
+			<field name="author" type="hidden" readonly="true"/>
+			<field name="rights" type="hidden" readonly="true"/>
+			<field name="xreference" type="hidden" readonly="true"/>
+		</fields>
+	</fieldset>
 
 </form>

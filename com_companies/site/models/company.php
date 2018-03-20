@@ -147,8 +147,16 @@ class CompaniesModelCompany extends ItemModel
 					// Now check if edit.own is available.
 					elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
 					{
+						JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
+
 						// Check for a valid user and that they are the owner.
 						if ($userId == $data->created_by)
+						{
+							$data->editLink = $editLink;
+						}
+
+						// Check for a valid user and that they are the employee.
+						elseif (CompaniesHelperEmployees::canEditItem($data->id, $userId, $asset))
 						{
 							$data->editLink = $editLink;
 						}

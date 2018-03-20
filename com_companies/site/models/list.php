@@ -326,6 +326,8 @@ class CompaniesModelList extends ListModel
 		if (!empty($items))
 		{
 			$user = Factory::getUser();
+			JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
+
 			foreach ($items as &$item)
 			{
 				$item->logo = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
@@ -350,6 +352,12 @@ class CompaniesModelList extends ListModel
 					{
 						// Check for a valid user and that they are the owner.
 						if ($userId == $item->created_by)
+						{
+							$item->editLink = $editLink;
+						}
+
+						// Check for a valid user and that they are the employee.
+						elseif (CompaniesHelperEmployees::canEditItem($item->id, $userId, $asset))
 						{
 							$item->editLink = $editLink;
 						}
