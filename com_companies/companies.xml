@@ -62,9 +62,4 @@
 		<folder>js</folder>
 		<folder>images</folder>
 	</media>
-	<updateservers>
-		<server type="extension" priority="1" name="COM_COMPANIES">
-			https://site.com/update?extension=com_companies
-		</server>
-	</updateservers>
 </extension>

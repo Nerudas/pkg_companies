@@ -18,7 +18,7 @@
 		<folder type="component" id="com_companies">com_companies</folder>
 	</files>
 	<updateservers>
-		<server type="extension" priority="1" name="PKG_COMPANIES">
+		<server type="extension" priority="1" name="Companies Package">
 			https://update.nerudas.ru?extension=pkg_companies
 		</server>
 	</updateservers>
