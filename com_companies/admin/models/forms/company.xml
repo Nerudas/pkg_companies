@@ -25,7 +25,10 @@
 			   unique="true"
 			   limit="10"
 			   text="true"
-			   subfolder="portfolio" />
+			   subfolder="portfolio"/>
+		<field name="employees" type="employees"
+			   label="COM_COMPANIES_EMPLOYEES"
+			   add="true"/>
 	</fieldset>
 	<fieldset name="global">
 		<field name="region" type="regions"

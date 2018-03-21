@@ -112,7 +112,6 @@ class CompaniesControllerCompany extends FormController
 		$selector = (!empty($data[$key])) ? $data[$key] : 0;
 		$author   = (!empty($data['created_by'])) ? $data['created_by'] : 0;
 
-		echo '<pre>', print_r($selector, true), '</pre>';
 		$asset   = 'com_companies.company.' . $selector;
 		$canEdit = $user->authorise('core.edit', $asset);
 		if (!$canEdit && $user->authorise('core.edit.own', $asset))

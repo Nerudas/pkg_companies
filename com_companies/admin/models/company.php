@@ -20,6 +20,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Form\Form;
 
 class CompaniesModelCompany extends AdminModel
 {
@@ -109,7 +110,7 @@ class CompaniesModelCompany extends AdminModel
 	 * @param   array   $data     Data for the form.
 	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  JForm|boolean  A JForm object on success, false on failure
+	 * @return  Form|boolean  A JForm object on success, false on failure
 	 *
 	 * @since  1.0.0
 	 */
@@ -158,6 +159,7 @@ class CompaniesModelCompany extends AdminModel
 		{
 			$form->setFieldAttribute('tags', 'parents', implode(',', $config->get('company_tags')));
 		}
+
 
 		return $form;
 	}

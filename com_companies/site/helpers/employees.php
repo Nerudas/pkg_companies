@@ -11,9 +11,16 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Component\ComponentHelper;
 
 class CompaniesHelperEmployees
 {
+	/**
+	 * Permission for companies items
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
 	protected static $_canEditItems = array();
 
 	/**
@@ -38,5 +45,41 @@ class CompaniesHelperEmployees
 		}
 
 		return self::$_canEditItems[$asset];
+	}
+
+	/**
+	 * Method to check key
+	 *
+	 * @param  string $key        Key value
+	 * @param  int    $company_id Company ID
+	 * @param  int    $user_id    User ID
+	 *
+	 * @return string Who must confirm
+	 *
+	 * @since 1.0.0
+	 */
+	public static function keyCheck($key, $company_id, $user_id = null)
+	{
+		$secret = ComponentHelper::getParams('com_companies')->get('secret');
+
+		// Don't need confirm
+		if (empty($key))
+		{
+			return 'confirm';
+		}
+
+		// User must confirm
+		if ($key == md5('user' . $company_id . $user_id . $secret))
+		{
+			return 'user';
+		}
+
+		// Company must confirm
+		if ($key == md5('company' . $company_id . $user_id . $secret))
+		{
+			return 'company';
+		}
+
+		return 'error';
 	}
 }

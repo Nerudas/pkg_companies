@@ -89,6 +89,15 @@ $doc->addScriptDeclaration('
 		echo HTMLHelper::_('bootstrap.endTab');
 		?>
 
+		<?php
+		if (!empty($this->item->id))
+		{
+			echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'employees', Text::_('COM_COMPANIES_EMPLOYEES'));
+			echo $this->form->getInput('employees');
+			echo HTMLHelper::_('bootstrap.endTab');
+		}
+		?>
+
 		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'publishing', Text::_('JGLOBAL_FIELDSET_PUBLISHING')); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">
