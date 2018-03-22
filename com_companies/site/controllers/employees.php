@@ -27,7 +27,8 @@ class CompaniesControllerEmployees extends BaseController
 	 */
 	public function changeData()
 	{
-		$app = Factory::getApplication();
+		$app   = Factory::getApplication();
+		$model = $this->getModel();
 
 		// Prepare data
 		$data               = array();
@@ -38,9 +39,9 @@ class CompaniesControllerEmployees extends BaseController
 
 		$msg   = Text::_('COM_COMPANIES_EMPLOYEES_CHANGE_SUCCESS');
 		$error = false;
-		if (!$this->getModel()->changeData($data))
+		if (!$model->changeData($data))
 		{
-			$msg   = Text::_('COM_COMPANIES_ERROR_EMPLOYEES_CHANGE');
+			$msg   = Text::sprintf('COM_COMPANIES_ERROR_EMPLOYEE_CHANGE', $model->getError());
 			$error = true;
 		}
 
@@ -64,6 +65,38 @@ class CompaniesControllerEmployees extends BaseController
 	public function getModel($name = 'Employees', $prefix = 'CompaniesModel', $config = array())
 	{
 		return parent::getModel($name, $prefix, $config);
+	}
+
+	/**
+	 * Method to set Response
+	 *
+	 * @param  string $status Response status
+	 * @param string  $text   Response text
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	protected function setResponse($status, $text = '')
+	{
+		// Set no cache
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Pragma: no-cache');
+		header('Expires: 0');
+
+		if (!empty($text))
+		{
+			echo Text::_($text);
+		}
+
+		if ($status == 'success')
+		{
+			echo '<script>setTimeout(function(){ window.opener.location.reload();window.close();},1000)</script>';
+		}
+
+		Factory::getApplication()->close();
+
+		return ($status !== 'error');
 	}
 
 }

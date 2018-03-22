@@ -14,6 +14,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
 
 class CompaniesModelEmployees extends BaseDatabaseModel
 {
@@ -188,6 +189,8 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 		if (empty($data['user_id']) || empty($data['company_id']))
 		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND'));
+
 			return false;
 		}
 
@@ -201,11 +204,15 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 		if (empty($db->loadResult()))
 		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND'));
+
 			return false;
 		}
 
 		if (!$this->canChange($data['company_id'], $data['user_id']))
 		{
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+
 			return false;
 		}
 
