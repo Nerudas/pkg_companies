@@ -105,16 +105,12 @@ class JFormFieldEmployees extends FormField
 	 */
 	protected function getLayoutData()
 	{
-		$data           = parent::getLayoutData();
-		$data['invite'] = $this->invite;
-
-		$data['invite_form'] = $this->invite_form;
-		$data['employees']   = $this->getEmployees();
-		$data['company_id']  = $this->company_id;
+		$data               = parent::getLayoutData();
+		$data['employees']  = $this->getEmployees();
+		$data['company_id'] = $this->company_id;
 
 		$params               = array();
 		$params['company_id'] = $this->company_id;
-		$params['invite']     = $this->invite;
 		$params['changeURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.changeData';
 		$params['deleteURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.delete' .
 			'&company_id=' . $this->company_id . '&user_id=';
