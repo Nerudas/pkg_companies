@@ -26,9 +26,8 @@
 			   limit="10"
 			   text="true"
 			   subfolder="portfolio"/>
-		<field name="employees" type="employees"
-			   label="COM_COMPANIES_EMPLOYEES"
-			   add="true"/>
+		<field name="employees" type="employees" label="COM_COMPANIES_EMPLOYEES"/>
+		<field name="invite_employee" type="invite_employee" label="COM_COMPANIES_EMPLOYEES_INVITE_LABEL"/>
 	</fieldset>
 	<fieldset name="global">
 		<field name="region" type="regions"

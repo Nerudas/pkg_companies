@@ -237,7 +237,6 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		$user        = Factory::getUser();
 		$company_id  = (!empty($company_id)) ? $company_id : $this->getState('company.id');
 		$employee_id = (!empty($employee_id)) ? $employee_id : $user->id;
-		$user        = Factory::getUser();
 
 		if (empty($company_id) || empty($employee_id))
 		{
@@ -336,5 +335,49 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		$db->setQuery($query);
 
 		return $db->execute();
+	}
+
+	/**
+	 * Method to check employee invite permission
+	 *
+	 * @param  int $company_id Company ID
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function canInvite($company_id = null)
+	{
+		$user       = Factory::getUser();
+		$company_id = (!empty($company_id)) ? $company_id : $this->getState('company.id');
+
+		// If can edit companies
+		if ($user->authorise('core.edit', 'com_companies'))
+		{
+			return true;
+		}
+
+		// If can edit company
+		if ($user->authorise('core.edit.own', 'com_companies.company.' . $company_id))
+		{
+			// If company owner
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select('created_by')
+				->from('#__companies')
+				->where('id = ' . $company_id);
+			$db->setQuery($query);
+			if ($user->id == $db->loadResult())
+			{
+				return true;
+			}
+
+			if ($this->canEditItem($company_id, $user->id, 'com_companies.company.' . $company_id))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

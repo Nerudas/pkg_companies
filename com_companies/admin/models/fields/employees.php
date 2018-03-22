@@ -33,14 +33,6 @@ class JFormFieldEmployees extends FormField
 	protected $company_id;
 
 	/**
-	 * Add field
-	 *
-	 * @var    bool
-	 * @since  1.0.0
-	 */
-	protected $add;
-
-	/**
 	 * Company employees
 	 *
 	 * @var    array
@@ -75,8 +67,6 @@ class JFormFieldEmployees extends FormField
 		if ($return = parent::setup($element, $value, $group))
 		{
 			$this->company_id = (!empty($this->element['company_id'])) ? (int) $this->element['company_id'] : 0;
-			$this->add        = (!empty($this->element['add']) &&
-				((string) $this->element['add'] == 'true' || (string) $this->element['add'] == 1));
 		}
 
 		if (empty($this->company_id))
@@ -103,7 +93,6 @@ class JFormFieldEmployees extends FormField
 			return $renderer->render($this->getLayoutData());
 		}
 
-
 		return false;
 	}
 
@@ -116,14 +105,16 @@ class JFormFieldEmployees extends FormField
 	 */
 	protected function getLayoutData()
 	{
-		$data               = parent::getLayoutData();
-		$data['add']        = $this->add;
-		$data['employees']  = $this->getEmployees();
-		$data['company_id'] = $this->company_id;
+		$data           = parent::getLayoutData();
+		$data['invite'] = $this->invite;
+
+		$data['invite_form'] = $this->invite_form;
+		$data['employees']   = $this->getEmployees();
+		$data['company_id']  = $this->company_id;
 
 		$params               = array();
 		$params['company_id'] = $this->company_id;
-		$params['add']        = $this->add;
+		$params['invite']     = $this->invite;
 		$params['changeURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.changeData';
 		$params['deleteURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.delete' .
 			'&company_id=' . $this->company_id . '&user_id=';
