@@ -352,10 +352,18 @@ class CompaniesModelCompany extends AdminModel
 	{
 		if (parent::delete($pks))
 		{
+			$db = Factory::getDbo();
+
 			// Delete images
 			foreach ($pks as $pk)
 			{
 				$this->imageFolderHelper->deleteItemImageFolder($pk);
+
+				// Delete employees
+				$query = $db->getQuery(true)
+					->delete($db->quoteName('#__companies_employees'))
+					->where($db->quoteName('company_id') . ' = ' . $db->quote($pk));
+				$db->setQuery($query)->execute();
 			}
 
 			return true;
