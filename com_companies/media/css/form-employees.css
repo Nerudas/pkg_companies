@@ -11,6 +11,7 @@
 	display: flex;
 	flex-wrap: wrap;
 }
+
 [data-input-employees] .item {
 	margin-bottom: 10px;
 	width: 300px;

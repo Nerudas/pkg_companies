@@ -25,7 +25,7 @@
 			   unique="true"
 			   limit="10"
 			   text="true"
-			   subfolder="portfolio" />
+			   subfolder="portfolio"/>
 	</fieldset>
 
 	<fieldset name="images" label="COM_COMPANIES_COMPANY_IMAGES">
