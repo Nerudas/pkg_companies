@@ -24,8 +24,11 @@
 				ajaxData.company_id = company_id;
 				ajaxData.user_id = $(item).data('user');
 				ajaxData.position = $(item).find('[name*="position"]').val();
-				ajaxData.as_company = $(item).find('[name*="as_company"]').val();
-
+				ajaxData.as_company = 0;
+				if ($(item).find('[name*="as_company"]').prop('checked')) {
+					ajaxData.as_company = 1;
+				}
+				
 				$.ajax({
 					type: 'POST',
 					dataType: 'json',
