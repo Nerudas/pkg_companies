@@ -15,6 +15,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 
 class CompaniesModelEmployees extends BaseDatabaseModel
 {
@@ -328,6 +329,8 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 			return false;
 		}
 
+		$db->setQuery($query);
+
 		$query = $db->getQuery(true)
 			->delete($db->quoteName('#__companies_employees'))
 			->where('company_id = ' . $company_id)
@@ -379,5 +382,197 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Method to send Request
+	 *
+	 * @param  int    $company_id Company ID
+	 * @param  int    $user_id    Employee user ID
+	 * @param  string $to         To whom to send a request
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function sendRequest($company_id, $user_id, $to)
+	{
+
+		if (empty($user_id))
+		{
+			$this->setError(Text::_('COM_PROFILES_ERROR_PROFILE_NOT_FOUND'));
+
+			return false;
+		}
+
+		if (empty($company_id))
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_COMPANY_NOT_FOUND'));
+
+			return false;
+		}
+
+		if (empty($to) || ($to != 'user' && $to != 'company'))
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_REQUEST'));
+
+			return false;
+		}
+
+		// Delete old record
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->delete($db->quoteName('#__companies_employees'))
+			->where('company_id = ' . $company_id)
+			->where('user_id = ' . $user_id);
+		$db->setQuery($query)->execute();
+
+		// Prepare data
+		$employee             = new stdClass();
+		$employee->company_id = $company_id;
+		$employee->user_id    = $user_id;
+		$employee->key        = $this->generateKey($to, $company_id, $user_id);
+
+		// Get company info
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select(array('id', 'title', 'created_by as owner'))
+			->from('#__companies')
+			->where('id = ' . $company_id);
+		$db->setQuery($query);
+		$company       = $db->loadObject();
+		$company->link = Route::_(CompaniesHelperRoute::getCompanyRoute($company->id));
+
+		// Get user info
+		$user = Factory::getUser($user_id);
+		JLoader::register('ProfilesHelperRoute', JPATH_SITE . '/components/com_profiles/helpers/route.php');
+		$user->link = Route::_(ProfilesHelperRoute::getProfileRoute($user->id));
+
+		// Check company owner
+		if ($user_id == $company->owner)
+		{
+			$employee->key = '';
+			$db->insertObject('#__companies_employees', $employee);
+
+			return true;
+		}
+
+		// If send to user
+		if ($to == 'user')
+		{
+			// Check can invite
+			if (!$this->canInvite($company_id))
+			{
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+
+				return false;
+			}
+
+			// If sent to me
+			if ($user_id == Factory::getUser()->id)
+			{
+				$employee->key = '';
+				$db->insertObject('#__companies_employees', $employee);
+
+				return true;
+			}
+		}
+
+		$db->insertObject('#__companies_employees', $employee);
+
+
+		// Send mail
+		$mail   = Factory::getMailer();
+		$config = Factory::getConfig();
+
+		$company_title = '<a href="' . $company->link . '" target="_blank">' . $company->title . '</a>';
+		$user_name     = '<a href="' . $user->link . '" target="_blank">' . $user->name . '</a>';
+		$confirmLink   = Uri::root() . 'index.php?option=com_companies&task=employees.confirm' .
+			'&type=' . $to . '&company_id=' . $company_id . '&user_id=' . $user_id . '&key=' . $employee->key;
+
+		$mail->setSubject(Text::_('COM_COMPANIES_EMPLOYEES_REQUEST_SUBJECT'));
+		$mail->setSender(array($config->get('mailfrom'), $config->get('sitename')));
+		$mail->isHtml(true);
+		$mail->Encoding = 'base64';
+
+		if ($to == 'user')
+		{
+			$mail->addRecipient($user->email);
+			$mail->setBody(Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_USER',
+				$user_name, $company_title, $confirmLink));
+		}
+
+		if ($to == 'company')
+		{
+			$query = $db->getQuery(true)
+				->select('u.email')
+				->from($db->quoteName('#__companies_employees', 'ce'))
+				->join('LEFT', '#__users AS u ON u.id = ce.user_id')
+				->where('company_id = ' . $company_id)
+				->where($db->quoteName('ce.key') . ' = ' . $db->quote(''));
+			$db->setQuery($query);
+			$mail->addRecipient($db->loadColumn());
+			$mail->setBody(Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_COMPANY',
+				$company_title, $user_name, $confirmLink));
+		}
+
+		$mail->send();
+
+		return true;
+	}
+
+
+	/**
+	 * Method to check key
+	 *
+	 * @param  string $key        Key value
+	 * @param  int    $company_id Company ID
+	 * @param  int    $user_id    User ID
+	 *
+	 * @return string Who must confirm
+	 *
+	 * @since 1.0.0
+	 */
+	public function checkKey($key, $company_id, $user_id = null)
+	{
+		// Don't need confirm
+		if (empty($key))
+		{
+			return 'confirm';
+		}
+
+		// User must confirm
+		if ($key == $this->generateKey('user', $company_id, $user_id))
+		{
+			return 'user';
+		}
+
+		// Company must confirm
+		if ($key == $this->generateKey('company', $company_id, $user_id))
+		{
+			return 'company';
+		}
+
+		return 'error';
+	}
+
+
+	/**
+	 * Method to generate key
+	 *
+	 * @param  string $type       Key type
+	 * @param  int    $company_id Company ID
+	 * @param  int    $user_id    User ID
+	 *
+	 * @return string key
+	 *
+	 * @since 1.0.0
+	 */
+	public function generateKey($type, $company_id, $user_id)
+	{
+		$secret = ComponentHelper::getParams('com_companies')->get('secret');
+
+		return md5($type . $company_id . $user_id . $secret);
 	}
 }

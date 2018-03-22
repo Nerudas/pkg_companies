@@ -93,7 +93,7 @@ $doc->addScriptDeclaration('
 		if (!empty($this->item->id))
 		{
 			echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'employees', Text::_('COM_COMPANIES_EMPLOYEES'));
-			echo $this->form->renderField('invite_employee');
+			echo $this->form->renderField('invite');
 			echo $this->form->getInput('employees');
 
 			echo HTMLHelper::_('bootstrap.endTab');

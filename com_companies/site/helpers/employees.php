@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Component\ComponentHelper;
 
 class CompaniesHelperEmployees
 {
@@ -60,26 +59,9 @@ class CompaniesHelperEmployees
 	 */
 	public static function keyCheck($key, $company_id, $user_id = null)
 	{
-		$secret = ComponentHelper::getParams('com_companies')->get('secret');
+		BaseDatabaseModel::addIncludePath(JPATH_SITE . '/components/com_companies/models');
+		$model = BaseDatabaseModel::getInstance('Employees', 'CompaniesModel', array('ignore_request' => true));
 
-		// Don't need confirm
-		if (empty($key))
-		{
-			return 'confirm';
-		}
-
-		// User must confirm
-		if ($key == md5('user' . $company_id . $user_id . $secret))
-		{
-			return 'user';
-		}
-
-		// Company must confirm
-		if ($key == md5('company' . $company_id . $user_id . $secret))
-		{
-			return 'company';
-		}
-
-		return 'error';
+		return $model->checkKey($key, $company_id, $user_id);
 	}
 }

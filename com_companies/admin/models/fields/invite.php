@@ -13,8 +13,9 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
-class JFormFieldEmployees extends FormField
+class JFormFieldInvite extends FormField
 {
 	/**
 	 * The form field type.
@@ -22,7 +23,7 @@ class JFormFieldEmployees extends FormField
 	 * @var    string
 	 * @since  1.0.0
 	 */
-	protected $type = 'employees';
+	protected $type = 'invite';
 
 	/**
 	 * Company ID
@@ -33,20 +34,12 @@ class JFormFieldEmployees extends FormField
 	protected $company_id;
 
 	/**
-	 * Company employees
-	 *
-	 * @var    array
-	 * @since  1.0.0
-	 */
-	protected $_employees = null;
-
-	/**
 	 * Name of the layout being used to render the field
 	 *
 	 * @var    string
 	 * @since  1.0.0
 	 */
-	protected $layout = 'components.com_companies.form.employees';
+	protected $layout = 'components.com_companies.form.invite';
 
 	/**
 	 * Method to attach a JForm object to the field.
@@ -74,7 +67,8 @@ class JFormFieldEmployees extends FormField
 			$this->company_id = $this->form->getValue('id', '');
 		}
 
-		return $return;
+
+		return ($this->canInvite()) ? $return : false;
 	}
 
 	/**
@@ -106,14 +100,12 @@ class JFormFieldEmployees extends FormField
 	protected function getLayoutData()
 	{
 		$data               = parent::getLayoutData();
-		$data['employees']  = $this->getEmployees();
 		$data['company_id'] = $this->company_id;
 
 		$params               = array();
 		$params['company_id'] = $this->company_id;
-		$params['changeURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.changeData';
-		$params['deleteURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.delete' .
-			'&company_id=' . $this->company_id . '&user_id=';
+		$params['inviteURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.sendRequest' .
+			'&to=user&company_id=' . $this->company_id . '&user_id=';
 
 		Factory::getDocument()->addScriptOptions($this->id, $params);
 
@@ -150,10 +142,7 @@ class JFormFieldEmployees extends FormField
 				$employee->avatar = Uri::root(true) . '/' . $avatar;
 
 				$employee->confirm = CompaniesHelperEmployees::keyCheck($employee->key, $this->company_id, $employee->id);
-				if ($employee->confirm != 'company')
-				{
-					unset($employee->key);
-				}
+				unset($employee->key);
 				$employee->as_company = ($employee->as_company == 1);
 			}
 
@@ -161,5 +150,20 @@ class JFormFieldEmployees extends FormField
 		}
 
 		return $this->_employees;
+	}
+
+	/**
+	 * Method to check employee invite permission
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	protected function canInvite()
+	{
+		BaseDatabaseModel::addIncludePath(JPATH_SITE . '/components/com_companies/models');
+		$model = BaseDatabaseModel::getInstance('Employees', 'CompaniesModel', array('ignore_request' => true));
+
+		return $model->canInvite($this->company_id);
 	}
 }

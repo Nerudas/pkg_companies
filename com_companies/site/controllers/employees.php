@@ -14,6 +14,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 class CompaniesControllerEmployees extends BaseController
 {
@@ -52,7 +53,7 @@ class CompaniesControllerEmployees extends BaseController
 	}
 
 	/**
-	 * Method to change Employee data
+	 * Method to change employee data
 	 *
 	 * @return bool
 	 *
@@ -80,6 +81,48 @@ class CompaniesControllerEmployees extends BaseController
 	}
 
 	/**
+	 * Method to send add employee request
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function sendRequest()
+	{
+		$app   = Factory::getApplication();
+		$model = $this->getModel();
+
+		$user_id    = $app->input->get('user_id', 0, 'int');
+		$company_id = $app->input->get('company_id', 0, 'int');
+		$to         = $app->input->get('to', 0, 'raw');
+		$return     = Route::_(CompaniesHelperRoute::getCompanyRoute($company_id));
+
+		if (empty($user_id))
+		{
+			return $this->setResponse('error', 'COM_PROFILES_ERROR_PROFILE_NOT_FOUND', $return);
+		}
+
+		if (empty($company_id))
+		{
+			return $this->setResponse('error', 'COM_COMPANIES_ERROR_COMPANY_NOT_FOUND', $return);
+		}
+
+		if (empty($to) || ($to != 'user' && $to != 'company'))
+		{
+			return $this->setResponse('error', 'COM_COMPANIES_ERROR_EMPLOYEES_REQUEST', $return);
+		}
+
+
+		if (!$model->sendRequest($company_id, $user_id, $to))
+		{
+			return $this->setResponse('error', $model->getError(), $return);
+		}
+
+		return $this->setResponse('success', 'COM_COMPANIES_EMPLOYEES_REQUEST_SUCCESS', $return);
+	}
+
+
+	/**
 	 * Method to get a model object, loading it if required.
 	 *
 	 * @param   string $name   The model name. Optional.
@@ -100,42 +143,50 @@ class CompaniesControllerEmployees extends BaseController
 	 *
 	 * @param  string $status Response status
 	 * @param string  $text   Response text
+	 * @param string  $return Return Link
 	 *
 	 * @return bool
 	 *
 	 * @since 1.0.0
 	 */
-	protected function setResponse($status, $text = '')
+	protected function setResponse($status, $text = '', $return = '')
 	{
 		$app   = Factory::getApplication();
 		$popup = $app->input->get('popup', false);
 
-		if ($popup)
-		{
-			// Set no cache
-			header('Cache-Control: no-store, no-cache, must-revalidate');
-			header('Pragma: no-cache');
-			header('Expires: 0');
-		}
+		// Set no cache
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Pragma: no-cache');
+		header('Expires: 0');
 
 		if (!empty($text))
 		{
-			if ($popup)
+			if (!empty($return) && !$popup)
+			{
+				$type = ($status == 'success') ? 'success' : 'error';
+				$app->enqueueMessage(Text::_($text), $type);
+			}
+			else
 			{
 				echo Text::_($text);
 			}
+
 		}
 
-		if ($status == 'success')
+		if ($status == 'success' && $popup)
 		{
-			if ($popup)
-			{
-
-				echo '<script>setTimeout(function(){ window.opener.location.reload();window.close();},1000)</script>';
-			}
+			echo '<script>setTimeout(function(){ window.opener.location.reload();window.close();},1000)</script>';
 		}
 
-		Factory::getApplication()->close();
+		if ($popup)
+		{
+			$app->close();
+		}
+		elseif (!empty($return))
+		{
+			$app->redirect($return);
+		}
+
 
 		return ($status !== 'error');
 	}
