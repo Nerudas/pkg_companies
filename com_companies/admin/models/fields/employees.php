@@ -124,6 +124,7 @@ class JFormFieldEmployees extends FormField
 		$params               = array();
 		$params['company_id'] = $this->company_id;
 		$params['add']        = $this->add;
+		$params['changeURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.changeData';
 
 		Factory::getDocument()->addScriptOptions($this->id, $params);
 
@@ -143,7 +144,7 @@ class JFormFieldEmployees extends FormField
 		{
 			$db    = Factory::getDbo();
 			$query = $db->getQuery(true)
-				->select(array('ce.user_id as id', 'ce.position', 'p.name', 'p.avatar', 'ce.key'))
+				->select(array('ce.user_id as id', 'ce.position', 'p.name', 'p.avatar', 'ce.key', 'ce.as_company'))
 				->from($db->quoteName('#__companies_employees', 'ce'))
 				->join('LEFT', '#__profiles AS p ON p.id = ce.user_id')
 				->where('ce.company_id = ' . (int) $this->company_id);
@@ -161,6 +162,7 @@ class JFormFieldEmployees extends FormField
 
 				$employee->confirm = CompaniesHelperEmployees::keyCheck($employee->key, $this->company_id, $employee->id);
 				unset($employee->key);
+				$employee->as_company = ($employee->as_company == 1);
 			}
 
 			$this->_employees = $employees;

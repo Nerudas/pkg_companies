@@ -17,16 +17,17 @@ extract($displayData);
 
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('stylesheet', 'media/com_companies/css/form-employees.min.css', array('version' => 'auto'));
-HTMLHelper::_('script', 'media/com_companies/js/form-employees.min.js', array('version' => 'auto'));
+HTMLHelper::_('script', 'media/com_companies/js/form-employees.js', array('version' => 'auto'));
 ?>
-<div id="<?php echo $id; ?>" data-employees-input="<?php echo $id; ?>">
+<div id="<?php echo $id; ?>" data-input-employees="<?php echo $id; ?>">
 	<?php foreach ($employees as $employee): ?>
-		<div class="item well <?php echo ($employee->confirm == 'user') ? 'wait-user' : ''; ?>">
+		<div class="item well <?php echo ($employee->confirm == 'user') ? 'wait-user' : ''; ?>"
+			 data-user="<?php echo $employee->id; ?>">
 			<div class="inner">
 				<div class="avatar">
 					<div class="image" style="background-image: url('<?php echo $employee->avatar; ?>')"></div>
 				</div>
-				<div class="content">
+				<div class="content span12">
 					<div class="name">
 						<?php echo $employee->name; ?>
 					</div>
@@ -34,7 +35,17 @@ HTMLHelper::_('script', 'media/com_companies/js/form-employees.min.js', array('v
 						<input type="text" id="<?php echo $id; ?>_<?php echo $employee->id; ?>_position"
 							   name="<?php echo $name; ?>[<?php echo $employee->id; ?>][position]"
 							   value="<?php echo $employee->position; ?>"
-							   placeholder="<?php echo Text::_('COM_COMPANIES_EMPLOYEES_POSITION'); ?>">
+							   placeholder="<?php echo Text::_('COM_COMPANIES_EMPLOYEES_POSITION'); ?>"
+							   class="span12" <?php echo ($employee->confirm !== 'confirm') ? ' readonly' : ''; ?>>
+					</div>
+					<div class="as_company">
+						<label for="<?php echo $id; ?>_<?php echo $employee->id; ?>_as_company" class="checkbox">
+							<input type="checkbox" value="1"<?php echo ($employee->as_company) ? ' checked ' : ' '; ?>
+								   id="<?php echo $id; ?>_<?php echo $employee->id; ?>_as_company"
+								   name="<?php echo $name; ?>[<?php echo $employee->id; ?>][as_company]"
+								<?php echo ($employee->confirm !== 'confirm') ? ' disabled="disabled" ' : ''; ?>>
+							<?php echo Text::_('COM_COMPANIES_EMPLOYEES_AS_COMPANY'); ?>
+						</label>
 					</div>
 				</div>
 				<div class="actions">
@@ -63,12 +74,6 @@ HTMLHelper::_('script', 'media/com_companies/js/form-employees.min.js', array('v
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-			<input type="hidden" id="<?php echo $id; ?>_<?php echo $employee->id; ?>_user_id"
-				   name="<?php echo $name; ?>[<?php echo $employee->id; ?>][user_id]"
-				   value="<?php echo $employee->id; ?>" readonly>
-			<input type="hidden" id="<?php echo $id; ?>_<?php echo $employee->id; ?>_company_id"
-				   name="<?php echo $name; ?>[<?php echo $employee->id; ?>][company_id]"
-				   value="<?php echo $company_id; ?>" readonly>
 		</div>
 	<?php endforeach; ?>
 </div>

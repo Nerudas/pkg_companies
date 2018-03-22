@@ -171,4 +171,111 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 		return $this->_canEditItems[$asset];
 	}
+
+	/**
+	 * Method to change employee data
+	 *
+	 * @param array $data to change
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function changeData($data = array())
+	{
+		$data['company_id'] = (!empty($data['company_id'])) ? $data['company_id'] : $this->getState('company.id');
+		$data['user_id']    = (!empty($data['user_id'])) ? $data['user_id'] : Factory::getUser()->id;
+
+		if (empty($data['user_id']) || empty($data['company_id']))
+		{
+			return false;
+		}
+
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select('user_id')
+			->from('#__companies_employees')
+			->where('company_id = ' . $data['company_id'])
+			->where('user_id = ' . $data['user_id']);
+		$db->setQuery($query);
+
+		if (empty($db->loadResult()))
+		{
+			return false;
+		}
+
+		if (!$this->canChange($data['company_id'], $data['user_id']))
+		{
+			return false;
+		}
+
+		// update
+		$update = (object) $data;
+
+		return $db->updateObject('#__companies_employees', $update, array('company_id', 'user_id'));
+	}
+
+	/**
+	 * Method to check employee edit permission
+	 *
+	 * @param  int $company_id  Company ID
+	 * @param int  $employee_id Employee user ID
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function canChange($company_id = null, $employee_id = null)
+	{
+		$user        = Factory::getUser();
+		$company_id  = (!empty($company_id)) ? $company_id : $this->getState('company.id');
+		$employee_id = (!empty($employee_id)) ? $employee_id : $user->id;
+		$user        = Factory::getUser();
+
+		if (empty($company_id) || empty($employee_id))
+		{
+			return false;
+		}
+
+		// If it's me
+		if ($user->id == $employee_id)
+		{
+			return true;
+		}
+
+		// If can edit users
+		if ($user->authorise('core.edit', 'com_users'))
+		{
+			return true;
+		}
+
+		// If can edit companies
+		if ($user->authorise('core.edit', 'com_companies'))
+		{
+			return true;
+		}
+
+		// If can edit company
+		if ($user->authorise('core.edit.own', 'com_companies.company.' . $company_id))
+		{
+			// If company owner
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select('created_by')
+				->from('#__companies')
+				->where('id = ' . $company_id);
+			$db->setQuery($query);
+			if ($user->id == $db->loadResult())
+			{
+				return true;
+			}
+
+			if ($this->canEditItem($company_id, $user->id, 'com_companies.company.' . $company_id))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
