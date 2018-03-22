@@ -125,6 +125,8 @@ class JFormFieldEmployees extends FormField
 		$params['company_id'] = $this->company_id;
 		$params['add']        = $this->add;
 		$params['changeURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.changeData';
+		$params['deleteURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.delete' .
+			'&company_id=' . $this->company_id . '&user_id=';
 
 		Factory::getDocument()->addScriptOptions($this->id, $params);
 

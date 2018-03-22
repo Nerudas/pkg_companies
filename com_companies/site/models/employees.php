@@ -285,4 +285,56 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 		return false;
 	}
+
+	/**
+	 * Method to delete employee
+	 *
+	 * @param  int $company_id Company ID
+	 * @param int  $user_id    Employee user ID
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function delete($company_id = null, $user_id = null)
+	{
+		$company_id = (!empty($company_id)) ? $company_id : $this->getState('company.id');
+
+		if (empty($company_id) || empty($user_id))
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND'));
+
+			return false;
+		}
+
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select('user_id')
+			->from('#__companies_employees')
+			->where('company_id = ' . $company_id)
+			->where('user_id = ' . $user_id);
+		$db->setQuery($query);
+
+		if (empty($db->loadResult()))
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND'));
+
+			return false;
+		}
+
+		if (!$this->canChange($company_id, $user_id))
+		{
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
+
+			return false;
+		}
+
+		$query = $db->getQuery(true)
+			->delete($db->quoteName('#__companies_employees'))
+			->where('company_id = ' . $company_id)
+			->where('user_id = ' . $user_id);
+		$db->setQuery($query);
+
+		return $db->execute();
+	}
 }

@@ -41,7 +41,7 @@ class CompaniesControllerEmployees extends BaseController
 		$error = false;
 		if (!$model->changeData($data))
 		{
-			$msg   = Text::sprintf('COM_COMPANIES_ERROR_EMPLOYEE_CHANGE', $model->getError());
+			$msg   = $model->getError();
 			$error = true;
 		}
 
@@ -49,6 +49,34 @@ class CompaniesControllerEmployees extends BaseController
 		$app->close();
 
 		return;
+	}
+
+	/**
+	 * Method to change Employee data
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function delete()
+	{
+		$app   = Factory::getApplication();
+		$model = $this->getModel();
+
+		$user_id    = $app->input->get('user_id', 0, 'int');
+		$company_id = $app->input->get('company_id', 0, 'int');
+
+		if (empty($user_id) || empty($company_id))
+		{
+			return $this->setResponse('error', 'COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND');
+		}
+
+		if (!$model->delete($company_id, $user_id))
+		{
+			return $this->setResponse('error', $model->getError());
+		}
+
+		return $this->setResponse('success', 'COM_COMPANIES_EMPLOYEES_DELETE_SUCCESS');
 	}
 
 	/**
@@ -79,19 +107,32 @@ class CompaniesControllerEmployees extends BaseController
 	 */
 	protected function setResponse($status, $text = '')
 	{
-		// Set no cache
-		header('Cache-Control: no-store, no-cache, must-revalidate');
-		header('Pragma: no-cache');
-		header('Expires: 0');
+		$app   = Factory::getApplication();
+		$popup = $app->input->get('popup', false);
+
+		if ($popup)
+		{
+			// Set no cache
+			header('Cache-Control: no-store, no-cache, must-revalidate');
+			header('Pragma: no-cache');
+			header('Expires: 0');
+		}
 
 		if (!empty($text))
 		{
-			echo Text::_($text);
+			if ($popup)
+			{
+				echo Text::_($text);
+			}
 		}
 
 		if ($status == 'success')
 		{
-			echo '<script>setTimeout(function(){ window.opener.location.reload();window.close();},1000)</script>';
+			if ($popup)
+			{
+
+				echo '<script>setTimeout(function(){ window.opener.location.reload();window.close();},1000)</script>';
+			}
 		}
 
 		Factory::getApplication()->close();

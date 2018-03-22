@@ -49,7 +49,10 @@ HTMLHelper::_('script', 'media/com_companies/js/form-employees.js', array('versi
 					</div>
 				</div>
 				<div class="actions">
-					<a class="delete btn btn-mini btn-danger"><i class="icon-remove"></i></a>
+					<a class="delete btn btn-mini btn-danger"
+					   title="<?php echo Text::sprintf('COM_COMPANIES_EMPLOYEES_DELETE_LABEL', $employee->name); ?>">
+						<i class="icon-remove"></i>
+					</a>
 					<?php if ($employee->confirm == 'company'): ?>
 						<a class="confirm btn btn-mini btn-success">
 							<?php echo Text::_('COM_COMPANIES_EMPLOYEES_CONFIRM_SUBMIT'); ?>

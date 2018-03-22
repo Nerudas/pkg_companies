@@ -13,11 +13,36 @@
 			var field = $(this),
 				id = field.attr('id'),
 				employees = field.find('[data-user]'),
-				employees_data = employees.find('input'),
+				employee_data = employees.find('input'),
+				employee_actions = employees.find('.actions'),
+				employee_delete = employee_actions.find('.delete'),
 				params = Joomla.getOptions(id, ''),
 				company_id = params.company_id;
 
-			$(employees_data).on('change', function () {
+			// Delete employee
+			$(employee_delete).on('click', function () {
+				if (confirm($(this).attr('title') + '?')) {
+					var item = $(this).closest('[data-user]'),
+						deleteURL = params.deleteURL + $(item).data('user') + '&popup=1';
+
+					var popupWidth = $(window).width() / 2,
+						popupHeight = $(window).height() / 2;
+
+					if (popupWidth < 320) {
+						popupWidth = 320;
+					}
+					if (popupHeight < 200) {
+						popupHeight = 200;
+					}
+					var popupParams = 'height=' + popupHeight + ',width=' + popupWidth +
+						',menubar=no,toolbar=no,location=no,directories=no,status=no,resizable=no,scrollbars=no';
+
+					window.open(deleteURL, null, popupParams);
+				}
+			});
+
+			// Change data
+			$(employee_data).on('change', function () {
 				var item = $(this).closest('[data-user]'),
 					changeURL = params.changeURL,
 					ajaxData = {};
@@ -28,14 +53,12 @@
 				if ($(item).find('[name*="as_company"]').prop('checked')) {
 					ajaxData.as_company = 1;
 				}
-				
 				$.ajax({
 					type: 'POST',
 					dataType: 'json',
 					url: changeURL,
 					data: ajaxData
 				});
-				console.log(ajaxData);
 			});
 
 		});
