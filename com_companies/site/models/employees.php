@@ -584,15 +584,19 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		// Check type
 		if (!$type)
 		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_KEY_NOT_FOUND'));
+
+			return false;
+		}
+		elseif ($type == 'error')
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_KEY_NOT_FOUND'));
+
 			return false;
 		}
 		elseif ($type == 'confirm')
 		{
 			return true;
-		}
-		elseif ($type == 'error')
-		{
-			return false;
 		}
 
 		if (empty($employee_id) || empty($company_id))
