@@ -135,14 +135,13 @@ class CompaniesControllerEmployees extends BaseController
 	 */
 	public function confirm()
 	{
-		$app   = Factory::getApplication();
-		$model = $this->getModel();
-		$user  = Factory::getUser();
+		$app    = Factory::getApplication();
+		$user   = Factory::getUser();
+		$model  = $this->getModel();
+		$return = Route::_('index.php?option=com_users&view=profile');
 
 		$user_id    = $app->input->get('user_id', $user->id, 'int');
 		$company_id = $app->input->get('company_id', 0, 'int');
-
-		$return = Route::_('index.php?option=com_users&view=profile');
 
 		// If no guest
 		if ($user->guest)
