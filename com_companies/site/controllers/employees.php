@@ -90,12 +90,20 @@ class CompaniesControllerEmployees extends BaseController
 	public function sendRequest()
 	{
 		$app    = Factory::getApplication();
+		$user = Factory::getUser();
 		$model  = $this->getModel();
 		$return = Route::_('index.php?option=com_users&view=profile');
 
 		$user_id    = $app->input->get('user_id', 0, 'int');
 		$company_id = $app->input->get('company_id', 0, 'int');
 		$to         = $app->input->get('to', 0, 'raw');
+
+		if ($user->guest)
+		{
+			$login = Route::_('index.php?option=com_users&view=login&return=' . base64_encode(Uri::getInstance()));
+			$app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'notice');
+			$app->redirect($login, 403);
+		}
 
 		if (empty($to) || ($to != 'user' && $to != 'company'))
 		{
@@ -104,7 +112,7 @@ class CompaniesControllerEmployees extends BaseController
 
 		if (empty($user_id) && $to == 'company')
 		{
-			$user_id = Factory::getUser()->id;
+			$user_id = $user->id;
 		}
 
 		if (empty($user_id))
@@ -143,7 +151,7 @@ class CompaniesControllerEmployees extends BaseController
 		$user_id    = $app->input->get('user_id', $user->id, 'int');
 		$company_id = $app->input->get('company_id', 0, 'int');
 
-		// If no guest
+		// If guest
 		if ($user->guest)
 		{
 			$login = Route::_('index.php?option=com_users&view=login&return=' . base64_encode(Uri::getInstance()));
