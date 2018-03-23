@@ -384,7 +384,6 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		return false;
 	}
 
-
 	/**
 	 * Method to send Request
 	 *
@@ -598,7 +597,6 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		// Key error
 		return 'error';
 	}
-
 
 	/**
 	 * Method to generate key
