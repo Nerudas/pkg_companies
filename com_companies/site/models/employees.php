@@ -385,7 +385,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 	}
 
 	/**
-	 * Method to send Request
+	 * Method to send request
 	 *
 	 * @param  int    $company_id Company ID
 	 * @param  int    $user_id    Employee user ID
@@ -398,6 +398,8 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 	public function sendRequest($company_id, $user_id, $to)
 	{
 		$key = $this->generateKey($to, $company_id, $user_id);
+		$db  = Factory::getDbo();
+
 		// Prepare data
 		$employee             = new stdClass();
 		$employee->company_id = $company_id;
@@ -425,7 +427,6 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		}
 
 		// Check exist record
-		$db    = Factory::getDbo();
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from($db->quoteName('#__companies_employees'))
@@ -562,6 +563,164 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		$mail->send();
 
 		return true;
+	}
+
+	/**
+	 * Method to confirm request
+	 *
+	 * @param  int    $company_id  Company ID
+	 * @param  int    $employee_id Employee user ID
+	 * @param  string $type        Type of confirmation (user| company | confirm | error)
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function confirm($company_id, $employee_id, $type)
+	{
+		$user = Factory::getUser();
+		$db   = Factory::getDbo();
+
+		// Check type
+		if (!$type)
+		{
+			return false;
+		}
+		elseif ($type == 'confirm')
+		{
+			return true;
+		}
+		elseif ($type == 'error')
+		{
+			return false;
+		}
+
+		if (empty($employee_id) || empty($company_id))
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND'));
+
+			return false;
+		}
+
+		// Addition key check
+		if ($this->generateKey($type, $company_id, $employee_id) != $this->getKey($company_id, $employee_id))
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_INVALID_KEY'));
+
+			return false;
+		}
+
+		// Prepare data
+		$employee             = new stdClass();
+		$employee->company_id = $company_id;
+		$employee->user_id    = $employee_id;
+		$employee->key        = '';
+
+		// If company owner
+		$query = $db->getQuery(true)
+			->select('created_by')
+			->from('#__companies')
+			->where('id = ' . $company_id);
+		$db->setQuery($query);
+		if ($employee_id == $db->loadResult())
+		{
+			if (!$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id')))
+			{
+				$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_CONFIRM'));
+
+				return false;
+			}
+
+			return true;
+		}
+
+		// User confirm
+		if ($type == 'user')
+		{
+			// If it's me
+			if ($user->id == $employee_id)
+			{
+				if (!$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id')))
+				{
+					$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_CONFIRM'));
+
+					return false;
+				}
+
+				return true;
+			}
+			// If can edit users
+			if ($user->authorise('core.edit', 'com_users'))
+			{
+				if (!$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id')))
+				{
+					$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_CONFIRM'));
+
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		// Company confirm
+		if ($type == 'company')
+		{
+			// If can edit companies
+			if ($user->authorise('core.edit', 'com_companies'))
+			{
+				if (!$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id')))
+				{
+					$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_CONFIRM'));
+
+					return false;
+				}
+
+				return true;
+			}
+
+			// If can edit company
+			$asset = 'com_companies.company.' . $company_id;
+			if ($user->authorise('core.edit.own', $asset) && $this->canEditItem($company_id, $user->id, $asset))
+			{
+				if (!$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id')))
+				{
+					$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_CONFIRM'));
+
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_CONFIRM'));
+
+		return false;
+	}
+
+	/**
+	 * Method to get employee confirm key
+	 *
+	 * @param  int $company_id Company ID
+	 * @param int  $user_id    User ID
+	 *
+	 * @return string | false
+	 *
+	 * @since 1.0.0
+	 */
+	public function getKey($company_id, $user_id)
+	{
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select(array('e.user_id', 'e.company_id', 'e.key'))
+			->from($db->quoteName('#__companies_employees', 'e'))
+			->where('company_id = ' . $company_id)
+			->where('user_id = ' . $user_id);
+		$db->setQuery($query);
+		$employee = $db->loadObject();
+
+		return (!empty($employee) && !empty($employee->user_id) && !empty($employee->company_id)) ? $employee->key : false;
 	}
 
 	/**

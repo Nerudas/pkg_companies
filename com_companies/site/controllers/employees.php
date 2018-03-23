@@ -15,10 +15,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 class CompaniesControllerEmployees extends BaseController
 {
-
 	/**
 	 * Method to change Employee data
 	 *
@@ -81,7 +81,7 @@ class CompaniesControllerEmployees extends BaseController
 	}
 
 	/**
-	 * Method to send add employee request
+	 * Method to send employee request
 	 *
 	 * @return bool
 	 *
@@ -128,6 +128,67 @@ class CompaniesControllerEmployees extends BaseController
 		return $this->setResponse('success', 'COM_COMPANIES_EMPLOYEES_REQUEST_SUCCESS', $return);
 	}
 
+	/**
+	 * Method to confirm employee request
+	 *
+	 * @return bool
+	 *
+	 * @since 1.0.0
+	 */
+	public function confirm()
+	{
+		$app   = Factory::getApplication();
+		$model = $this->getModel();
+		$user  = Factory::getUser();
+
+		$user_id    = $app->input->get('user_id', $user->id, 'int');
+		$company_id = $app->input->get('company_id', 0, 'int');
+
+		$return = Route::_('index.php?option=com_users&view=profile');
+
+		// If no guest
+		if ($user->guest)
+		{
+			$login = Route::_('index.php?option=com_users&view=login&return=' . base64_encode(Uri::getInstance()));
+			$app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'notice');
+			$app->redirect($login, 403);
+		}
+
+		if (empty($user_id))
+		{
+			return $this->setResponse('error', 'COM_PROFILES_ERROR_PROFILE_NOT_FOUND', $return);
+		}
+
+		if (empty($company_id))
+		{
+			return $this->setResponse('error', 'COM_COMPANIES_ERROR_COMPANY_NOT_FOUND', $return);
+		}
+
+		// Get key
+		$key = $model->getKey($company_id, $user_id);
+		if (!$key)
+		{
+			return $this->setResponse('error', 'COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND', $return);
+		}
+
+		// Get confirm type
+		$type = $model->checkKey($key, $company_id, $user_id);
+		if (!$type || $type == 'error')
+		{
+			return $this->setResponse('error', 'COM_COMPANIES_ERROR_EMPLOYEES_KEY_NOT_FOUND', $return);
+		}
+		elseif ($type == 'confirm')
+		{
+			return $this->setResponse('success', 'COM_COMPANIES_EMPLOYEES_CONFIRM_SUCCESS', $return);
+		}
+
+		if (!$model->confirm($company_id, $user_id, $type))
+		{
+			return $this->setResponse('error', $model->getError(), $return);
+		}
+
+		return $this->setResponse('success', 'COM_COMPANIES_EMPLOYEES_CONFIRM_SUCCESS', $return);
+	}
 
 	/**
 	 * Method to get a model object, loading it if required.
@@ -193,7 +254,6 @@ class CompaniesControllerEmployees extends BaseController
 		{
 			$app->redirect($return);
 		}
-
 
 		return ($status !== 'error');
 	}
