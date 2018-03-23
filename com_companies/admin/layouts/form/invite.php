@@ -23,7 +23,7 @@ extract($displayData);
 
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('stylesheet', 'media/com_companies/css/form-invite.min.css', array('version' => 'auto'));
-HTMLHelper::_('script', 'media/com_companies/js/form-invite.js', array('version' => 'auto'));
+HTMLHelper::_('script', 'media/com_companies/js/form-invite.min.js', array('version' => 'auto'));
 ?>
 <div id="<?php echo $id; ?>" data-input-invite="<?php echo $id; ?>">
 	<div class="user-field">
