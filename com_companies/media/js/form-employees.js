@@ -15,9 +15,35 @@
 				employees = field.find('[data-user]'),
 				employee_data = employees.find('input'),
 				employee_actions = employees.find('.actions'),
+				employee_confirm = employee_actions.find('.confirm'),
 				employee_delete = employee_actions.find('.delete'),
 				params = Joomla.getOptions(id, ''),
 				company_id = params.company_id;
+
+			// Confirm employee
+			$(employee_confirm).on('click', function () {
+				var popupURL = params.confirmURL + '&' +
+					$.param({
+						'user_id': $(this).closest('[data-user]').data('user'),
+						'company_id': company_id,
+						'popup': 1
+					});
+
+				var popupWidth = $(window).width() / 2,
+					popupHeight = $(window).height() / 2;
+
+				if (popupWidth < 320) {
+					popupWidth = 320;
+				}
+				if (popupHeight < 200) {
+					popupHeight = 200;
+				}
+				var popupParams = 'height=' + popupHeight + ',width=' + popupWidth +
+					',menubar=no,toolbar=no,location=no,directories=no,status=no,resizable=no,scrollbars=no';
+
+				window.open(popupURL, null, popupParams);
+
+			});
 
 			// Delete employee
 			$(employee_delete).on('click', function () {

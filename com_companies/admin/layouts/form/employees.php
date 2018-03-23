@@ -17,7 +17,7 @@ extract($displayData);
 
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('stylesheet', 'media/com_companies/css/form-employees.min.css', array('version' => 'auto'));
-HTMLHelper::_('script', 'media/com_companies/js/form-employees.js', array('version' => 'auto'));
+HTMLHelper::_('script', 'media/com_companies/js/form-employees.min.js', array('version' => 'auto'));
 ?>
 <div id="<?php echo $id; ?>" data-input-employees="<?php echo $id; ?>">
 	<div class="list clearfix">
