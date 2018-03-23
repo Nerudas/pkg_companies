@@ -502,7 +502,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		// If send to company
 		if ($to == 'company')
 		{
-			// If is to me
+			// If is not  me
 			if ($user_id !== Factory::getUser()->id)
 			{
 				$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_PERMISSIONS'));
@@ -574,7 +574,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 	 *
 	 * @since 1.0.0
 	 */
-	public function checkKey($key, $company_id, $user_id = null)
+	public function checkKey($key, $company_id, $user_id)
 	{
 		// Already confirm
 		if (empty($key))

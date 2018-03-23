@@ -57,7 +57,7 @@ class CompaniesHelperEmployees
 	 *
 	 * @since 1.0.0
 	 */
-	public static function keyCheck($key, $company_id, $user_id = null)
+	public static function keyCheck($key, $company_id, $user_id)
 	{
 		BaseDatabaseModel::addIncludePath(JPATH_SITE . '/components/com_companies/models');
 		$model = BaseDatabaseModel::getInstance('Employees', 'CompaniesModel', array('ignore_request' => true));

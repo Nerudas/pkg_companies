@@ -152,10 +152,8 @@ class JFormFieldEmployees extends FormField
 				$employee->avatar = Uri::root(true) . '/' . $avatar;
 
 				$employee->confirm = CompaniesHelperEmployees::keyCheck($employee->key, $this->company_id, $employee->id);
-				if ($employee->confirm != 'company')
-				{
-					unset($employee->key);
-				}
+				unset($employee->key);
+
 				$employee->as_company = ($employee->as_company == 1);
 			}
 
