@@ -89,8 +89,9 @@ class CompaniesControllerEmployees extends BaseController
 	 */
 	public function sendRequest()
 	{
-		$app   = Factory::getApplication();
-		$model = $this->getModel();
+		$app    = Factory::getApplication();
+		$model  = $this->getModel();
+		$return = Route::_('index.php?option=com_users&view=profile');
 
 		$user_id    = $app->input->get('user_id', 0, 'int');
 		$company_id = $app->input->get('company_id', 0, 'int');
@@ -115,9 +116,6 @@ class CompaniesControllerEmployees extends BaseController
 		{
 			return $this->setResponse('error', 'COM_COMPANIES_ERROR_COMPANY_NOT_FOUND', $return);
 		}
-
-		$return = ($to == 'user') ? Route::_(CompaniesHelperRoute::getCompanyRoute($company_id)) :
-			Route::_('index.php?option=com_users&view=profile');
 
 
 		if (!$model->sendRequest($company_id, $user_id, $to))
