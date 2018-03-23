@@ -542,6 +542,11 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 				->where($db->quoteName('ce.key') . ' = ' . $db->quote(''));
 			$db->setQuery($query);
 			$recipient = $db->loadColumn();
+
+			if (empty($recipient))
+			{
+				$recipient = Factory::getUser($company->owner)->email;
+			}
 		}
 
 		$company_title = '<a href="' . $company->link . '" target="_blank">' . $company->title . '</a>';
