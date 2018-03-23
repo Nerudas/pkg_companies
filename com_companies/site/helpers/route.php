@@ -119,8 +119,8 @@ class CompaniesHelperRoute extends RouteHelper
 	/**
 	 * Fetches the employees send request route
 	 *
-	 * @param int $company_id Company ID
-	 * @param int $user_id    User ID
+	 * @param int    $company_id Company ID
+	 * @param int    $user_id    User ID
 	 * @param string $to         To whom to send a request (user | company)
 	 *
 	 * @return  string
