@@ -104,8 +104,10 @@ class JFormFieldInvite extends FormField
 
 		$params               = array();
 		$params['company_id'] = $this->company_id;
-		$params['inviteURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.sendRequest' .
-			'&to=user&company_id=' . $this->company_id . '&user_id=';
+
+		JLoader::register('CompaniesHelperRoute', JPATH_SITE . '/components/com_companies/helpers/route.php');
+		$root                = Uri::root(true) . '/';
+		$params['inviteURL'] = $root . CompaniesHelperRoute::getEmployeesSendRequestRoute();
 
 		Factory::getDocument()->addScriptOptions($this->id, $params);
 

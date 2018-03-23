@@ -60,4 +60,132 @@ class CompaniesHelperRoute extends RouteHelper
 
 		return $link;
 	}
+
+	/**
+	 * Fetches the employees change data route
+	 *
+	 * @param null $company_id Company ID
+	 * @param null $user_id    User ID
+	 *
+	 * @return  string
+	 *
+	 * @since 1.0.0
+	 */
+	public static function getEmployeesChangeDataRoute($company_id = null, $user_id = null)
+	{
+		$link = 'index.php?option=com_companies&task=employees.changeData';
+
+		if (!empty($company_id))
+		{
+			$link .= '&company_id=' . $company_id;
+		}
+
+		if (!empty($user_id))
+		{
+			$link .= '&user_id=' . $user_id;
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Fetches the employees delete route
+	 *
+	 * @param null $company_id Company ID
+	 * @param null $user_id    User ID
+	 *
+	 * @return  string
+	 *
+	 * @since 1.0.0
+	 */
+	public static function getEmployeesDeleteRoute($company_id = null, $user_id = null)
+	{
+		$link = 'index.php?option=com_companies&task=employees.delete';
+
+		if (!empty($company_id))
+		{
+			$link .= '&company_id=' . $company_id;
+		}
+
+		if (!empty($user_id))
+		{
+			$link .= '&user_id=' . $user_id;
+		}
+
+		return $link;
+	}
+
+
+	/**
+	 * Fetches the employees send request route
+	 *
+	 * @param null $company_id Company ID
+	 * @param null $user_id    User ID
+	 * @param null $to         To whom to send a request (user | company)
+	 *
+	 * @return  string
+	 *
+	 * @since 1.0.0
+	 */
+	public static function getEmployeesSendRequestRoute($company_id = null, $user_id = null, $to = null)
+	{
+		$link = 'index.php?option=com_companies&task=employees.sendRequest';
+
+		if (!empty($company_id))
+		{
+			$link .= '&company_id=' . $company_id;
+		}
+
+		if (!empty($user_id))
+		{
+			$link .= '&user_id=' . $user_id;
+		}
+
+		if (!empty($to))
+		{
+			$link .= '&to=' . $to;
+		}
+
+		return $link;
+	}
+
+
+	/**
+	 * Fetches the employees confirm route
+	 *
+	 * @param null $company_id Company ID
+	 * @param null $user_id    User ID
+	 * @param null $type       Confirm type (user | company)
+	 * @param null $key        Confirm key
+	 *
+	 * @return  string
+	 *
+	 * @since 1.0.0
+	 */
+	public static function getEmployeesConfirmRoute($company_id = null, $user_id = null, $type = null, $key = null)
+	{
+		$link = 'index.php?option=com_companies&task=employees.confirm';
+
+		if (!empty($company_id))
+		{
+			$link .= '&company_id=' . $company_id;
+		}
+
+		if (!empty($user_id))
+		{
+			$link .= '&user_id=' . $user_id;
+		}
+
+		if (!empty($type))
+		{
+			$link .= '&type=' . $type;
+		}
+
+		if (!empty($key))
+		{
+			$link .= '&key=' . $key;
+		}
+
+		return $link;
+	}
 }

@@ -324,7 +324,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 		if (!$this->canChange($company_id, $user_id))
 		{
-			$this->setError(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_PERMISSIONS'));
 
 			return false;
 		}
@@ -398,6 +398,11 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 	 */
 	public function sendRequest($company_id, $user_id, $to)
 	{
+		$key = $this->generateKey($to, $company_id, $user_id);
+		// Prepare data
+		$employee             = new stdClass();
+		$employee->company_id = $company_id;
+		$employee->user_id    = $user_id;
 
 		if (empty($user_id))
 		{
@@ -420,19 +425,21 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 			return false;
 		}
 
-		// Delete old record
+		// Check exist record
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true)
-			->delete($db->quoteName('#__companies_employees'))
+			->select('COUNT(*)')
+			->from($db->quoteName('#__companies_employees'))
 			->where('company_id = ' . $company_id)
 			->where('user_id = ' . $user_id);
-		$db->setQuery($query)->execute();
+		$db->setQuery($query);
+		$exist = ($db->loadResult() > 0);
 
-		// Prepare data
-		$employee             = new stdClass();
-		$employee->company_id = $company_id;
-		$employee->user_id    = $user_id;
-		$employee->key        = $this->generateKey($to, $company_id, $user_id);
+		// If already confirm employee
+		if ($exist && $this->canEditItem($company_id, $user_id, 'com_companies.company.' . $company_id))
+		{
+			return true;
+		}
 
 		// Get company info
 		$db    = Factory::getDbo();
@@ -447,13 +454,20 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		// Get user info
 		$user = Factory::getUser($user_id);
 		JLoader::register('ProfilesHelperRoute', JPATH_SITE . '/components/com_profiles/helpers/route.php');
-		$user->link = Route::_(ProfilesHelperRoute::getProfileRoute($user->id));
+		$user->link = Route::_(ProfilesHelperRoute::getProfileRoute($user_id));
 
 		// Check company owner
 		if ($user_id == $company->owner)
 		{
-			$employee->key = '';
-			$db->insertObject('#__companies_employees', $employee);
+			$result = (!$exist) ? $db->insertObject('#__companies_employees', $employee) :
+				$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id'));
+
+			if (!$result)
+			{
+				$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_REQUEST'));
+
+				return false;
+			}
 
 			return true;
 		}
@@ -464,7 +478,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 			// Check can invite
 			if (!$this->canInvite($company_id))
 			{
-				$this->setError(Text::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+				$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_PERMISSIONS'));
 
 				return false;
 			}
@@ -472,37 +486,52 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 			// If sent to me
 			if ($user_id == Factory::getUser()->id)
 			{
-				$employee->key = '';
-				$db->insertObject('#__companies_employees', $employee);
+				$result = (!$exist) ? $db->insertObject('#__companies_employees', $employee) :
+					$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id'));
+
+				if (!$result)
+				{
+					$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_REQUEST'));
+
+					return false;
+				}
 
 				return true;
 			}
 		}
 
-		$db->insertObject('#__companies_employees', $employee);
-
-
-		// Send mail
-		$mail   = Factory::getMailer();
-		$config = Factory::getConfig();
-
-		$company_title = '<a href="' . $company->link . '" target="_blank">' . $company->title . '</a>';
-		$user_name     = '<a href="' . $user->link . '" target="_blank">' . $user->name . '</a>';
-		$confirmLink   = Uri::root() . 'index.php?option=com_companies&task=employees.confirm' .
-			'&type=' . $to . '&company_id=' . $company_id . '&user_id=' . $user_id . '&key=' . $employee->key;
-
-		$mail->setSubject(Text::_('COM_COMPANIES_EMPLOYEES_REQUEST_SUBJECT'));
-		$mail->setSender(array($config->get('mailfrom'), $config->get('sitename')));
-		$mail->isHtml(true);
-		$mail->Encoding = 'base64';
-
-		if ($to == 'user')
+		// If send to company
+		if ($to == 'company')
 		{
-			$mail->addRecipient($user->email);
-			$mail->setBody(Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_USER',
-				$user_name, $company_title, $confirmLink));
+			// If is to me
+			if ($user_id !== Factory::getUser()->id)
+			{
+				$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_PERMISSIONS'));
+
+				return false;
+			}
 		}
 
+		// Add employee record
+		$employee->key = $key;
+		$result        = (!$exist) ? $db->insertObject('#__companies_employees', $employee) :
+			$db->updateObject('#__companies_employees', $employee, array('company_id', 'user_id'));
+		if (!$result)
+		{
+			$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEES_REQUEST'));
+
+			return false;
+		}
+
+		// Prepare mail
+		$subject = ($to == 'user') ?
+			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_SUBJECT_USER', $company->title) :
+			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_SUBJECT_COMPANY', $user->name);
+
+		$siteConfig = Factory::getConfig();
+		$sender     = array($siteConfig->get('mailfrom'), $siteConfig->get('sitename'));
+
+		$recipient = $user->email;
 		if ($to == 'company')
 		{
 			$query = $db->getQuery(true)
@@ -512,16 +541,28 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 				->where('company_id = ' . $company_id)
 				->where($db->quoteName('ce.key') . ' = ' . $db->quote(''));
 			$db->setQuery($query);
-			$mail->addRecipient($db->loadColumn());
-			$mail->setBody(Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_COMPANY',
-				$company_title, $user_name, $confirmLink));
+			$recipient = $db->loadColumn();
 		}
 
+		$company_title = '<a href="' . $company->link . '" target="_blank">' . $company->title . '</a>';
+		$user_name     = '<a href="' . $user->link . '" target="_blank">' . $user->name . '</a>';
+		$confirmLink   = Uri::root() . CompaniesHelperRoute::getEmployeesConfirmRoute($company_id, $user_id, $to, $key);
+		$body          = ($to == 'user') ?
+			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_USER', $user_name, $company_title, $confirmLink) :
+			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_COMPANY', $company_title, $user_name, $confirmLink);
+
+		// Send email
+		$mail = Factory::getMailer();
+		$mail->setSubject($subject);
+		$mail->setSender($sender);
+		$mail->addRecipient($recipient);
+		$mail->setBody($body);
+		$mail->isHtml(true);
+		$mail->Encoding = 'base64';
 		$mail->send();
 
 		return true;
 	}
-
 
 	/**
 	 * Method to check key
@@ -536,24 +577,25 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 	 */
 	public function checkKey($key, $company_id, $user_id = null)
 	{
-		// Don't need confirm
+		// Already confirm
 		if (empty($key))
 		{
 			return 'confirm';
 		}
 
-		// User must confirm
+		// User confirm
 		if ($key == $this->generateKey('user', $company_id, $user_id))
 		{
 			return 'user';
 		}
 
-		// Company must confirm
+		// Company confirm
 		if ($key == $this->generateKey('company', $company_id, $user_id))
 		{
 			return 'company';
 		}
 
+		// Key error
 		return 'error';
 	}
 

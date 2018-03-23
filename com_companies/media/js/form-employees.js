@@ -22,8 +22,12 @@
 			// Delete employee
 			$(employee_delete).on('click', function () {
 				if (confirm($(this).attr('title') + '?')) {
-					var item = $(this).closest('[data-user]'),
-						deleteURL = params.deleteURL + $(item).data('user') + '&popup=1';
+					var popupUrl = params.deleteURL + '&' +
+						$.param({
+							'user_id': $(this).closest('[data-user]').data('user'),
+							'company_id': company_id,
+							'popup': 1
+						});
 
 					var popupWidth = $(window).width() / 2,
 						popupHeight = $(window).height() / 2;
@@ -37,7 +41,7 @@
 					var popupParams = 'height=' + popupHeight + ',width=' + popupWidth +
 						',menubar=no,toolbar=no,location=no,directories=no,status=no,resizable=no,scrollbars=no';
 
-					window.open(deleteURL, null, popupParams);
+					window.open(popupUrl, null, popupParams);
 				}
 			});
 

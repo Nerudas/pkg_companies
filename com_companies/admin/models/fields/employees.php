@@ -111,9 +111,11 @@ class JFormFieldEmployees extends FormField
 
 		$params               = array();
 		$params['company_id'] = $this->company_id;
-		$params['changeURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.changeData';
-		$params['deleteURL']  = Uri::root(true) . '/index.php?option=com_companies&task=employees.delete' .
-			'&company_id=' . $this->company_id . '&user_id=';
+
+		JLoader::register('CompaniesHelperRoute', JPATH_SITE . '/components/com_companies/helpers/route.php');
+		$root                = Uri::root(true) . '/';
+		$params['changeURL'] = $root . CompaniesHelperRoute::getEmployeesChangeDataRoute();
+		$params['deleteURL'] = $root . CompaniesHelperRoute::getEmployeesDeleteRoute();
 
 		Factory::getDocument()->addScriptOptions($this->id, $params);
 
