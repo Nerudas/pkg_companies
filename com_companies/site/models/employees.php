@@ -545,7 +545,8 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 		$company_title = '<a href="' . $company->link . '" target="_blank">' . $company->title . '</a>';
 		$user_name     = '<a href="' . $user->link . '" target="_blank">' . $user->name . '</a>';
-		$confirmLink   = Uri::root() . CompaniesHelperRoute::getEmployeesConfirmRoute($company_id, $user_id, $to, $key);
+		$confirmLink   = trim(Uri::root(), '/') .
+			Route::_(CompaniesHelperRoute::getEmployeesConfirmRoute($company_id, $user_id));
 		$body          = ($to == 'user') ?
 			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_USER', $user_name, $company_title, $confirmLink) :
 			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_COMPANY', $company_title, $user_name, $confirmLink);

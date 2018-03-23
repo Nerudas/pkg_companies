@@ -155,14 +155,12 @@ class CompaniesHelperRoute extends RouteHelper
 	 *
 	 * @param null $company_id Company ID
 	 * @param null $user_id    User ID
-	 * @param null $type       Confirm type (user | company)
-	 * @param null $key        Confirm key
 	 *
 	 * @return  string
 	 *
 	 * @since 1.0.0
 	 */
-	public static function getEmployeesConfirmRoute($company_id = null, $user_id = null, $type = null, $key = null)
+	public static function getEmployeesConfirmRoute($company_id = null, $user_id = null)
 	{
 		$link = 'index.php?option=com_companies&task=employees.confirm';
 
