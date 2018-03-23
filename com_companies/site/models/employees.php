@@ -653,6 +653,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 				return true;
 			}
+
 			// If can edit users
 			if ($user->authorise('core.edit', 'com_users'))
 			{
