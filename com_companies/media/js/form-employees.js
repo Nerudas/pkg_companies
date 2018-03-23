@@ -22,7 +22,7 @@
 			// Delete employee
 			$(employee_delete).on('click', function () {
 				if (confirm($(this).attr('title') + '?')) {
-					var popupUrl = params.deleteURL + '&' +
+					var popupURL = params.deleteURL + '&' +
 						$.param({
 							'user_id': $(this).closest('[data-user]').data('user'),
 							'company_id': company_id,
@@ -41,7 +41,7 @@
 					var popupParams = 'height=' + popupHeight + ',width=' + popupWidth +
 						',menubar=no,toolbar=no,location=no,directories=no,status=no,resizable=no,scrollbars=no';
 
-					window.open(popupUrl, null, popupParams);
+					window.open(popupURL, null, popupParams);
 				}
 			});
 
