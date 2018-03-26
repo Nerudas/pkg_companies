@@ -444,7 +444,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		// Get company info
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true)
-			->select(array('id', 'title', 'created_by as owner'))
+			->select(array('id', 'name', 'created_by as owner'))
 			->from('#__companies')
 			->where('id = ' . $company_id);
 		$db->setQuery($query);
@@ -525,7 +525,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 		// Prepare mail
 		$subject = ($to == 'user') ?
-			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_SUBJECT_USER', $company->title) :
+			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_SUBJECT_USER', $company->name) :
 			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_SUBJECT_COMPANY', $user->name);
 
 		$siteConfig = Factory::getConfig();
@@ -549,13 +549,13 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 			}
 		}
 
-		$company_title = '<a href="' . $company->link . '" target="_blank">' . $company->title . '</a>';
+		$company_name = '<a href="' . $company->link . '" target="_blank">' . $company->name . '</a>';
 		$user_name     = '<a href="' . $user->link . '" target="_blank">' . $user->name . '</a>';
 		$confirmLink   = trim(Uri::root(), '/') .
 			Route::_(CompaniesHelperRoute::getEmployeesConfirmRoute($company_id, $user_id));
 		$body          = ($to == 'user') ?
-			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_USER', $user_name, $company_title, $confirmLink) :
-			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_COMPANY', $company_title, $user_name, $confirmLink);
+			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_USER', $user_name, $company_name, $confirmLink) :
+			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_COMPANY', $company_name, $user_name, $confirmLink);
 
 		// Send email
 		$mail = Factory::getMailer();

@@ -88,7 +88,7 @@ class com_CompaniesInstallerScript
 		$company->field_mappings                               = new stdClass();
 		$company->field_mappings->common                       = new stdClass();
 		$company->field_mappings->common->core_content_item_id = 'id';
-		$company->field_mappings->common->core_title           = 'title';
+		$company->field_mappings->common->core_title           = 'name';
 		$company->field_mappings->common->core_state           = 'state';
 		$company->field_mappings->common->core_alias           = 'alias';
 		$company->field_mappings->common->core_created_time    = 'created';

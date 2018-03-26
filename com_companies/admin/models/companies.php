@@ -31,7 +31,7 @@ class CompaniesModelCompanies extends ListModel
 		{
 			$config['filter_fields'] = array(
 				'c.id', 'id',
-				'c.title', 'title',
+				'c.name', 'name',
 				'c.alias', 'alias',
 				'c.about', 'about',
 				'c.contacts', 'contacts',
@@ -228,7 +228,7 @@ class CompaniesModelCompanies extends ListModel
 			}
 			else
 			{
-				$text_columns = array('c.title', 'c.about', 'c.contacts', 'c.requisites', 'c.tags_search', 'r.name', 'ua.name');
+				$text_columns = array('c.name', 'c.about', 'c.contacts', 'c.requisites', 'c.tags_search', 'r.name', 'ua.name');
 
 				$sql = array();
 				foreach ($text_columns as $column)

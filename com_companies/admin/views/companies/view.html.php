@@ -159,7 +159,7 @@ class CompaniesViewCompanies extends HtmlView
 		return [
 			'c.state'      => Text::_('JSTATUS'),
 			'c.id'         => Text::_('JGRID_HEADING_ID'),
-			'c.title'      => Text::_('JGLOBAL_TITLE'),
+			'c.name'       => Text::_('COM_COMPANIES_COMPANY_NAME'),
 			'c.created'    => Text::_('JGLOBAL_CREATED_DATE'),
 			'c.created_by' => Text::_('JAUTHOR'),
 			'c.hits'       => Text::_('JGLOBAL_HITS'),

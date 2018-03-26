@@ -226,9 +226,9 @@ class CompaniesViewCompany extends HtmlView
 		// If the menu item does not concern this contact
 		if ($menu && ($menu->query['option'] !== 'com_companies' || $menu->query['view'] !== 'company' || $id != $item->id))
 		{
-			if ($item->title)
+			if ($item->name)
 			{
-				$title = $item->title;
+				$title = $item->name;
 			}
 
 			$path   = array();

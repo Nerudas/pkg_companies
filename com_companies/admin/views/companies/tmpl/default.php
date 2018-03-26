@@ -54,7 +54,7 @@ $columns = 11;
 					<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'c.state', $listDirn, $listOrder); ?>
 				</th>
 				<th style="min-width:100px" class="nowrap">
-					<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'c.title', $listDirn, $listOrder); ?>
+					<?php echo HTMLHelper::_('searchtools.sort', 'COM_COMPANIES_COMPANY_NAME', 'c.name', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap hidden-phone center">
 					<?php echo Text::_('COM_COMPANIES_COMPANY_LOGO'); ?>
@@ -107,7 +107,7 @@ $columns = 11;
 							if ($canChange)
 							{
 								HTMLHelper::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'companies');
-								echo HTMLHelper::_('actionsdropdown.render', $this->escape($item->title));
+								echo HTMLHelper::_('actionsdropdown.render', $this->escape($item->name));
 							}
 							?>
 						</div>
@@ -117,16 +117,16 @@ $columns = 11;
 							<?php if ($canEdit) : ?>
 								<a class="hasTooltip" title="<?php echo Text::_('JACTION_EDIT'); ?>"
 								   href="<?php echo Route::_('index.php?option=com_companies&task=company.edit&id=' . $item->id); ?>">
-									<?php echo $this->escape($item->title); ?>
+									<?php echo $this->escape($item->name); ?>
 								</a>
 							<?php else : ?>
-								<?php echo $this->escape($item->title); ?>
+								<?php echo $this->escape($item->name); ?>
 							<?php endif; ?>
 						</div>
 					</td>
 					<td class="center">
 						<?php if ($item->logo): ?>
-							<img src="<?php echo $item->logo; ?>" alt="<?php echo $item->title; ?>" class="logo">
+							<img src="<?php echo $item->logo; ?>" alt="<?php echo $item->name; ?>" class="logo">
 						<?php endif; ?>
 					</td>
 					<td class="small hidden-phone">

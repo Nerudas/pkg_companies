@@ -31,7 +31,7 @@ echo '<pre>', print_r($this->addLink, true), '</pre>';
 <div>
 	<?php foreach ($this->items as $item): ?>
 		<div>
-			<h2><a href="<?php echo $item->link; ?>"><?php echo $item->title; ?></a></h2>
+			<h2><a href="<?php echo $item->link; ?>"><?php echo $item->name; ?></a></h2>
 			<div><?php echo $item->link; ?></div>
 			<img src="<?php echo $item->logo; ?>" alt="">
 			<?php // echo '<pre>', print_r($item, true), '</pre>'; ?>

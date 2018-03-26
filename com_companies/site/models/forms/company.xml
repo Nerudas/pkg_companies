@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fieldset>
-		<field name="title" type="text"
-			   label="JGLOBAL_TITLE"
-			   description="JFIELD_TITLE_DESC"
+		<field name="name" type="text"
+			   label="COM_COMPANIES_COMPANY_NAME"
 			   class="input-xxlarge input-large-text"
 			   size="40"
 			   required="true"/>

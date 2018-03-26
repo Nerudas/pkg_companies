@@ -27,8 +27,8 @@
 			   onchange="this.form.submit();"
 			   default="c.created DESC">
 			<option value="">JGLOBAL_SORT_BY</option>
-			<option value="c.title ASC">JGLOBAL_TITLE_ASC</option>
-			<option value="c.title DESC">JGLOBAL_TITLE_DESC</option>
+			<option value="c.name ASC">COM_COMPANIES_COMPANY_NAME_ASC</option>
+			<option value="c.name DESC">COM_COMPANIES_COMPANY_NAME_DESC</option>
 			<option value="c.access ASC">JGRID_HEADING_ACCESS_ASC</option>
 			<option value="c.access DESC">JGRID_HEADING_ACCESS_DESC</option>
 			<option value="c.id ASC">JGRID_HEADING_ID_ASC</option>

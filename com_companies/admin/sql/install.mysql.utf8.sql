@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `#__companies` (
   `id`          INT(11)          NOT NULL AUTO_INCREMENT,
-  `title`       VARCHAR(255)     NOT NULL DEFAULT '',
+  `name`       VARCHAR(255)     NOT NULL DEFAULT '',
   `alias`       VARCHAR(400)     NOT NULL DEFAULT '',
   `about`       LONGTEXT         NOT NULL DEFAULT '',
   `contacts`    MEDIUMTEXT       NOT NULL DEFAULT '',
