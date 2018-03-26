@@ -50,7 +50,6 @@ class CompaniesModelCompany extends AdminModel
 		parent::__construct($config);
 	}
 
-
 	/**
 	 * Method to get a single record.
 	 *
@@ -160,14 +159,14 @@ class CompaniesModelCompany extends AdminModel
 			$form->setFieldAttribute('tags', 'parents', implode(',', $config->get('company_tags')));
 		}
 
-		if (empty($id)) {
+		if (empty($id))
+		{
 			$form->removeField('employees', '');
 			$form->removeField('invite', '');
 		}
 
 		return $form;
 	}
-
 
 	/**
 	 * Method to get the data that should be injected in the form.
@@ -204,11 +203,13 @@ class CompaniesModelCompany extends AdminModel
 		$filter = InputFilter::getInstance();
 		$table  = $this->getTable();
 		$db     = Factory::getDbo();
+		$isNew  = true;
 
 		// Load the row if saving an existing type.
 		if ($pk > 0)
 		{
 			$table->load($pk);
+			$isNew = false;
 		}
 
 		// Check alias
@@ -335,6 +336,18 @@ class CompaniesModelCompany extends AdminModel
 				{
 					$db->updateObject('#__ucm_content', $update, 'core_content_id');
 				}
+			}
+
+			// Add employee if new company
+			if ($isNew)
+			{
+				$employee             = new stdClass();
+				$employee->company_id = $id;
+				$employee->user_id    = $data['created_by'];
+				$employee->position   = (!empty($data['position'])) ? $data['position'] : '';
+				$employee->as_company = (!empty($data['as_company'])) ? 1 : 0;
+
+				$db->insertObject('#__companies_employees', $employee);
 			}
 
 			return $id;
@@ -466,7 +479,6 @@ class CompaniesModelCompany extends AdminModel
 
 			return $response;
 		}
-
 
 		$table = $this->getTable();
 		$table->load(array('alias' => $alias));
