@@ -42,6 +42,7 @@ $doc->addScriptDeclaration('
 	<?php echo $this->form->renderFieldSet('images'); ?>
 	<?php echo $this->form->renderFieldSet('contacts'); ?>
 	<?php echo $this->form->renderFieldSet('requisites'); ?>
+	<?php echo $this->form->renderField('employees'); ?>
 	<?php echo $this->form->renderField('portfolio'); ?>
 	<?php echo $this->form->renderFieldSet('hidden'); ?>
 

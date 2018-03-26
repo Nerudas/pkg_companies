@@ -160,6 +160,10 @@ class CompaniesModelCompany extends AdminModel
 			$form->setFieldAttribute('tags', 'parents', implode(',', $config->get('company_tags')));
 		}
 
+		if (empty($id)) {
+			$form->removeField('employees', '');
+			$form->removeField('invite', '');
+		}
 
 		return $form;
 	}

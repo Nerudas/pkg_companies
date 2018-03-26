@@ -26,6 +26,9 @@
 			   limit="10"
 			   text="true"
 			   subfolder="portfolio"/>
+		<field name="employees" type="employees"
+			   addfieldpath="/administrator/components/com_companies/models/fields"
+			   label="COM_COMPANIES_EMPLOYEES"/>
 	</fieldset>
 
 	<fieldset name="images" label="COM_COMPANIES_COMPANY_IMAGES">
