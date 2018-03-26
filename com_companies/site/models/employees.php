@@ -504,7 +504,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		if ($to == 'company')
 		{
 			// If is not  me
-			if ($user_id !== Factory::getUser()->id)
+			if ($user_id != Factory::getUser()->id)
 			{
 				$this->setError(Text::_('COM_COMPANIES_ERROR_EMPLOYEE_PERMISSIONS'));
 
