@@ -100,6 +100,8 @@ class CompaniesModelCompany extends AdminModel
 	 */
 	public function getTable($type = 'Companies', $prefix = 'CompaniesTable', $config = array())
 	{
+		Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_companies/tables');
+
 		return Table::getInstance($type, $prefix, $config);
 	}
 
@@ -212,6 +214,9 @@ class CompaniesModelCompany extends AdminModel
 			$isNew = false;
 		}
 
+		$data['id']    = (!isset($data['id'])) ? 0 : $data['id'];
+		$data['alias'] = (!isset($data['alias'])) ? '' : $data['alias'];
+
 		// Check alias
 		$alias = $this->checkAlias($data['id'], $data['alias']);
 		if (!empty($alias->msg))
@@ -308,9 +313,17 @@ class CompaniesModelCompany extends AdminModel
 			$data['portfolio'] = (!empty($data['portfolio'])) ? $data['portfolio'] : '';
 
 			// Save images
-			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'logo', $data['logo']);
-			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'header', $data['header']);
-			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'portfolio', $data['portfolio']);
+			if (!empty($data['imagefolder']))
+			{
+				$data['logo']        = (!isset($data['logo'])) ? '' : $data['logo'];
+				$data['header']      = (!isset($data['header'])) ? '' : $data['header'];
+				$data['portfolio']   = (!isset($data['portfolio'])) ? '' : $data['portfolio'];
+				$data['imagefolder'] = (!isset($data['imagefolder'])) ? '' : $data['imagefolder'];
+
+				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'logo', $data['logo']);
+				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'header', $data['header']);
+				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'portfolio', $data['portfolio']);
+			}
 
 			// Fix alias
 			if ($data['alias'] == 'id0' || $data['alias'] == 'id')
