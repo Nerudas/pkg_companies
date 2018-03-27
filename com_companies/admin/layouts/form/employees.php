@@ -25,12 +25,14 @@ HTMLHelper::_('script', 'media/com_companies/js/form-employees.min.js', array('v
 			<div class="item well <?php echo ($employee->confirm == 'user') ? 'wait-user' : ''; ?>"
 				 data-user="<?php echo $employee->id; ?>">
 				<div class="inner">
-					<div class="avatar">
+					<a class="avatar" href="<?php echo $employee->link; ?>" target="_blank">
 						<div class="image" style="background-image: url('<?php echo $employee->avatar; ?>')"></div>
-					</div>
+					</a>
 					<div class="content span12">
 						<div class="name">
-							<?php echo $employee->name; ?>
+							<a href="<?php echo $employee->link; ?>" target="_blank">
+								<?php echo $employee->name; ?>
+							</a>
 						</div>
 						<div class="position">
 							<input type="text" id="<?php echo $id; ?>_<?php echo $employee->id; ?>_position"

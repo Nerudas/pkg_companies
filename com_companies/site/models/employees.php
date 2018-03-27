@@ -52,6 +52,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		$pk = $app->input->getInt('company');
 		$this->setState('company.id', $pk);
 
+		$user = Factory::getUser();
 		// Published state
 		if ((!$user->authorise('core.manage', 'com_companies')))
 		{
@@ -550,10 +551,10 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 		}
 
 		$company_name = '<a href="' . $company->link . '" target="_blank">' . $company->name . '</a>';
-		$user_name     = '<a href="' . $user->link . '" target="_blank">' . $user->name . '</a>';
-		$confirmLink   = trim(Uri::root(), '/') .
+		$user_name    = '<a href="' . $user->link . '" target="_blank">' . $user->name . '</a>';
+		$confirmLink  = trim(Uri::root(), '/') .
 			Route::_(CompaniesHelperRoute::getEmployeesConfirmRoute($company_id, $user_id));
-		$body          = ($to == 'user') ?
+		$body         = ($to == 'user') ?
 			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_USER', $user_name, $company_name, $confirmLink) :
 			Text::sprintf('COM_COMPANIES_EMPLOYEES_REQUEST_TEXT_COMPANY', $company_name, $user_name, $confirmLink);
 

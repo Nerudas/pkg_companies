@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
 
 class JFormFieldEmployees extends FormField
 {
@@ -145,7 +146,7 @@ class JFormFieldEmployees extends FormField
 			$employees = $db->loadObjectList('id');
 
 			JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
-
+			JLoader::register('ProfilesHelperRoute', JPATH_SITE . '/components/com_profiles/helpers/route.php');
 			foreach ($employees as &$employee)
 			{
 				$avatar           = (!empty($employee->avatar) && JFile::exists(JPATH_ROOT . '/' . $employee->avatar)) ?
@@ -154,6 +155,15 @@ class JFormFieldEmployees extends FormField
 
 				$employee->confirm = CompaniesHelperEmployees::keyCheck($employee->key, $this->company_id, $employee->id);
 				unset($employee->key);
+
+				$link = 'index.php?option=com_users&task=user.edit&id=' . $employee->id;
+				if (Factory::getApplication()->isSite())
+				{
+					$link = (Factory::getUser()->id == $employee->id) ?
+						Route::_('index.php?option=com_users&view=profile&layout=edit')
+						: Route::_(ProfilesHelperRoute::getProfileRoute($employee->id));
+				}
+				$employee->link = $link;
 
 				$employee->as_company = ($employee->as_company == 1);
 			}
