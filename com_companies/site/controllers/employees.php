@@ -67,9 +67,11 @@ class CompaniesControllerEmployees extends BaseController
 		$user_id    = $app->input->get('user_id', 0, 'int');
 		$company_id = $app->input->get('company_id', 0, 'int');
 
+		$return = Route::_('index.php?option=com_users&view=profile');
+
 		if (empty($user_id) || empty($company_id))
 		{
-			return $this->setResponse('error', 'COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND');
+			return $this->setResponse('error', 'COM_COMPANIES_ERROR_EMPLOYEE_NOT_FOUND', $return);
 		}
 
 		if (!$model->delete($company_id, $user_id))
@@ -77,7 +79,7 @@ class CompaniesControllerEmployees extends BaseController
 			return $this->setResponse('error', $model->getError());
 		}
 
-		return $this->setResponse('success', 'COM_COMPANIES_EMPLOYEES_DELETE_SUCCESS');
+		return $this->setResponse('success', 'COM_COMPANIES_EMPLOYEES_DELETE_SUCCESS', $return);
 	}
 
 	/**
@@ -90,7 +92,7 @@ class CompaniesControllerEmployees extends BaseController
 	public function sendRequest()
 	{
 		$app    = Factory::getApplication();
-		$user = Factory::getUser();
+		$user   = Factory::getUser();
 		$model  = $this->getModel();
 		$return = Route::_('index.php?option=com_users&view=profile');
 
