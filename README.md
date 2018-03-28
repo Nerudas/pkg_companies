@@ -13,3 +13,6 @@ Thank you for your understanding.
 ## Package Contents
 * **Companies Component**  
 Component for creating Companies section on the site
+
+* **Companies - Latest Module**  
+Module for displaying the latest companies
