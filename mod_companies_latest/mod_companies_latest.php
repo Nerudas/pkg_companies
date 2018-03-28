@@ -34,8 +34,9 @@ else
 }
 
 // Variables
-$items   = $model->getItems();
-$addLink = Route::_(CompaniesHelperRoute::getFormRoute());
+$items    = $model->getItems();
+$listLink = Route::_(CompaniesHelperRoute::getListRoute());
+$addLink  = Route::_(CompaniesHelperRoute::getFormRoute());
 
 require ModuleHelper::getLayoutPath($module->module, $params->get('layout', 'default'));
 
