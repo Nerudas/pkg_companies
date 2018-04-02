@@ -313,7 +313,8 @@ class CompaniesModelCompany extends AdminModel
 			$data['logo']        = (!isset($data['logo'])) ? '' : $data['logo'];
 			$data['header']      = (!isset($data['header'])) ? '' : $data['header'];
 			$data['portfolio']   = (!isset($data['portfolio'])) ? '' : $data['portfolio'];
-			$data['imagefolder'] = (!isset($data['imagefolder'])) ? '' : $data['imagefolder'];
+			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
+				$this->imageFolderHelper->getItemImageFolder($id);
 
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'logo', $data['logo']);
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'header', $data['header']);
