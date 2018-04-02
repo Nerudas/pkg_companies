@@ -308,7 +308,6 @@ class CompaniesModelCompany extends AdminModel
 		{
 			$id = $this->getState($this->getName() . '.id');
 
-
 			// Save images
 			$data['logo']        = (!isset($data['logo'])) ? '' : $data['logo'];
 			$data['header']      = (!isset($data['header'])) ? '' : $data['header'];
