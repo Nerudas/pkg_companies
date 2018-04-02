@@ -159,6 +159,7 @@ class CompaniesModelCompanies extends ListModel
 		$query = $db->getQuery(true)
 			->select('c.*')
 			->from($db->quoteName('#__companies', 'c'));
+
 		// Join over the users for the author.
 		$query->select('ua.name AS owner_name')
 			->join('LEFT', '#__users AS ua ON ua.id = c.created_by');
