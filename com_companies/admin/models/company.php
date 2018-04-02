@@ -271,12 +271,6 @@ class CompaniesModelCompany extends AdminModel
 			$data['created_by'] = Factory::getUser()->id;
 		}
 
-		if (isset($data['attribs']) && is_array($data['attribs']))
-		{
-			$registry        = new Registry($data['attribs']);
-			$data['attribs'] = (string) $registry;
-		}
-
 		// Get tags search
 		if (!empty($data['tags']))
 		{
