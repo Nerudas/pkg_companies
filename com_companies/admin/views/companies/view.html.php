@@ -141,7 +141,7 @@ class CompaniesViewCompanies extends HtmlView
 			JToolbarHelper::trash('companies.trash');
 		}
 
-		if ($user->authorise('core.admin', 'com_companies') || $user->authorise('core.options', 'com_board'))
+		if ($user->authorise('core.admin', 'com_companies') || $user->authorise('core.options', 'com_companies'))
 		{
 			JToolbarHelper::preferences('com_companies');
 		}
