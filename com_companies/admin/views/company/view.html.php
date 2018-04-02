@@ -35,15 +35,6 @@ class CompaniesViewCompany extends HtmlView
 	protected $item;
 
 	/**
-	 * The categories array
-	 *
-	 * @var  array
-	 *
-	 * @since  1.0.0
-	 */
-	protected $categories;
-
-	/**
 	 * The model state
 	 *
 	 * @var  object
@@ -98,9 +89,9 @@ class CompaniesViewCompany extends HtmlView
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$isNew      = ($this->item->id == 0);
-		$this->user = Factory::getUser();
-		$canDo      = CompaniesHelper::getActions('com_companies', 'company', $this->item->id);
+
+		$isNew = ($this->item->id == 0);
+		$canDo = CompaniesHelper::getActions('com_companies', 'company', $this->item->id);
 
 		if ($isNew)
 		{
