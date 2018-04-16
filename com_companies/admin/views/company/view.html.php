@@ -104,7 +104,6 @@ class CompaniesViewCompany extends HtmlView
 			{
 				JToolbarHelper::apply('company.apply');
 				JToolbarHelper::save('company.save');
-				JToolbarHelper::save2new('company.save2new');
 			}
 		}
 		// Edit
@@ -120,6 +119,11 @@ class CompaniesViewCompany extends HtmlView
 				JToolbarHelper::apply('company.apply');
 				JToolbarHelper::save('company.save');
 			}
+		}
+		// For all records, check the create permission.
+		if ($canDo->get('core.create'))
+		{
+			JToolbarHelper::save2new('company.save2new');
 		}
 
 		JToolbarHelper::cancel('company.cancel', 'JTOOLBAR_CLOSE');
