@@ -8,6 +8,7 @@
 			   layout="joomla.form.field.regions.current"/>
 		<field name="tags" type="advtags"
 			   label="COM_COMPANIES_COMPANY_TAGS"
-			   multiple="true"/>
+			   multiple="true"
+			   root_titles="true"/>
 	</fields>
 </form>

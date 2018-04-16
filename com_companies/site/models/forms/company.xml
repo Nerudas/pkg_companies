@@ -17,7 +17,8 @@
 			   buttons="true"/>
 		<field name="tags" type="advtags"
 			   label="COM_COMPANIES_COMPANY_TAGS"
-			   multiple="true"/>
+			   multiple="true"
+			   root_titles="true"/>
 		<field name="portfolio" type="ajaximage"
 			   label="COM_COMPANIES_COMPANY_PORTFOLIO"
 			   multiple="true"

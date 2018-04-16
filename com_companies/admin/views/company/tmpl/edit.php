@@ -83,7 +83,7 @@ $doc->addScriptDeclaration('
 		?>
 
 		<?php
-		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'tags', Text::_('COM_COMPANIES_COMPANY_TAGS'));
+		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'tags', Text::_('JTAG'));
 		echo $this->form->getInput('tags');
 		echo HTMLHelper::_('bootstrap.endTab');
 		?>
