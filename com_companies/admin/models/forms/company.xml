@@ -19,6 +19,7 @@
 			   subfolder="portfolio"/>
 		<field name="employees" type="employees" label="COM_COMPANIES_EMPLOYEES"/>
 		<field name="invite" type="invite" label="COM_COMPANIES_EMPLOYEES_INVITE_LABEL"/>
+		<field name="information" type="information" label="COM_COMPANIES_COMPANY_INFORMATION"/>
 	</fieldset>
 	<fieldset name="header">
 		<field name="name" type="text"

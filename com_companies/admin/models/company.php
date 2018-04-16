@@ -21,6 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Application\SiteApplication;
 
 class CompaniesModelCompany extends AdminModel
 {
@@ -32,6 +33,17 @@ class CompaniesModelCompany extends AdminModel
 	 * @since  1.0.0
 	 */
 	protected $imageFolderHelper = null;
+
+
+	/**
+	 * Profile information
+	 *
+	 * @var    array
+	 *
+	 * @since 1.0.1
+	 */
+	protected $_information = null;
+
 
 	/**
 	 * Constructor.
@@ -67,7 +79,6 @@ class CompaniesModelCompany extends AdminModel
 			$registry    = new Registry($item->notes);
 			$item->notes = $registry->toArray();
 
-
 			// Convert the metadata field to an array.
 			$registry       = new Registry($item->metadata);
 			$item->metadata = $registry->toArray();
@@ -88,10 +99,125 @@ class CompaniesModelCompany extends AdminModel
 			$item->tags = new TagsHelper;
 			$item->tags->getTagIds($item->id, 'com_companies.company');
 
+			// Get Info
+			$item->information = $this->getInformation($item);
+
 		}
 
 		return $item;
 	}
+
+	/**
+	 * Method to get information.
+	 *
+	 * @param   object $item Company object
+	 *
+	 * @return array
+	 *
+	 * @since 1.0.1
+	 */
+	public function getInformation($item)
+	{
+		if (!is_array($this->_information))
+		{
+			$information = array();
+			if (!empty($item->id))
+			{
+				$db = Factory::getDbo();
+
+
+				$information['id']   = $item->id;
+				$information['name'] = $item->name;
+
+				JLoader::register('CompaniesHelperRoute', JPATH_SITE . '/components/com_companies/helpers/route.php');
+				$siteRouter          = SiteApplication::getRouter();
+				$link                = $siteRouter->build(CompaniesHelperRoute::getCompanyRoute($item->id))->toString();
+				$information['link'] = str_replace('administrator/', '', $link);
+
+				$information['logo'] = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
+					Uri::root(true) . '/' . $item->logo : false;
+
+
+				$contacts = (!empty($item->contacts)) ? $item->contacts : array();
+				if (!empty($contacts['email']))
+				{
+					$information['contacts_email'] = $contacts['email'];
+				}
+				if (!empty($contacts['phones']))
+				{
+					$phones = array();
+					foreach ($contacts['phones'] as $phone)
+					{
+						$phones[] = $phone['code'] . $phone['number'];
+					}
+					$information['contacts_phones'] = implode(',', $phones);
+				}
+				if (!empty($contacts['site']))
+				{
+					$information['contacts_site'] = $contacts['site'];
+				}
+				if (!empty($contacts['vk']))
+				{
+					$information['contacts_vk'] = $contacts['vk'];
+				}
+				if (!empty($contacts['facebook']))
+				{
+					$information['contacts_facebook'] = $contacts['facebook'];
+				}
+				if (!empty($contacts['instagram']))
+				{
+					$information['contacts_instagram'] = $contacts['instagram'];
+				}
+				if (!empty($contacts['odnoklassniki']))
+				{
+					$information['contacts_odnoklassniki'] = $contacts['odnoklassniki'];
+				}
+
+				// Check as_company
+				$query = $db->getQuery(true)
+					->select('COUNT(*)')
+					->from($db->quoteName('#__companies_employees', 'employees'))
+					->where('employees.company_id = ' . $item->id)
+					->where('employees.as_company = ' . 1)
+					->where($db->quoteName('employees.key') . ' = ' . $db->quote(''));
+				$db->setQuery($query);
+				$information['as_company'] = ($db->loadResult() > 0);
+
+
+				if ($item->region == '*')
+				{
+					$information['region'] = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
+				}
+				else
+				{
+					$query = $db->getQuery(true)
+						->select('name')
+						->from('#__regions')
+						->where('id = ' . $item->region);
+					$db->setQuery($query);
+					$region                = $db->loadResult();
+					$information['region'] = (!empty($region)) ? $region : Text::_('JGLOBAL_FIELD_REGIONS_NULL');
+				}
+
+				// Get Tags
+				$tags = '';
+				if ((!empty($item->tags->tags)))
+				{
+					$query = $db->getQuery(true)
+						->select('title')
+						->from('#__tags')
+						->where('id IN (' . $item->tags->tags . ')');
+					$db->setQuery($query);
+					$tags = implode(',', $db->loadColumn());
+				}
+				$information['tags'] = $tags;
+			}
+			$this->_information = $information;
+		}
+
+		return $this->_information;
+	}
+
 
 	/**
 	 * Returns a Table object, always creating it.

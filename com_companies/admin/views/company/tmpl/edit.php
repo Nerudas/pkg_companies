@@ -48,7 +48,7 @@ $doc->addScriptDeclaration('
 		<div class="row-fluid">
 			<div class="span9">
 				<fieldset class="adminform">
-
+					<?php echo $this->form->getInput('information'); ?>
 				</fieldset>
 			</div>
 			<div class="span3">
