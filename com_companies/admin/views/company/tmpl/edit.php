@@ -42,21 +42,26 @@ $doc->addScriptDeclaration('
 		<?php echo $this->form->renderFieldset('header'); ?>
 	</div>
 	<div class="form-horizontal">
-		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
-
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('COM_COMPANIES_COMPANY_ABOUT')); ?>
+		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'information')); ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'information',
+			Text::_('COM_COMPANIES_COMPANY_INFORMATION')); ?>
 		<div class="row-fluid">
 			<div class="span9">
 				<fieldset class="adminform">
-					<?php echo $this->form->getInput('about'); ?>
+
 				</fieldset>
 			</div>
 			<div class="span3">
 				<fieldset class="form-vertical">
+					<?php echo $this->form->renderFieldset('notes'); ?>
 					<?php echo $this->form->renderFieldset('global'); ?>
 				</fieldset>
 			</div>
 		</div>
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'about', Text::_('COM_COMPANIES_COMPANY_ABOUT')); ?>
+		<?php echo $this->form->getInput('about'); ?>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php

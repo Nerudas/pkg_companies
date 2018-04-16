@@ -37,7 +37,13 @@
 			<option value="0">JNO</option>
 		</field>
 	</fieldset>
-
+	<fieldset name="notes" label="COM_COMPANIES_COMPANY_NOTES">
+		<fields name="notes">
+			<field name="note" type="textarea"
+				   label="COM_COMPANIES_COMPANY_NOTES_NOTE"
+				   class="input-xxlarge"/>
+		</fields>
+	</fieldset>
 	<fieldset name="global">
 		<field name="region" type="regions"
 			   label="JGLOBAL_FIELD_REGIONS_LABEL"

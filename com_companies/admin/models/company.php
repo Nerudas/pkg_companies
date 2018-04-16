@@ -63,6 +63,11 @@ class CompaniesModelCompany extends AdminModel
 	{
 		if ($item = parent::getItem($pk))
 		{
+			// Convert the notes field to an array.
+			$registry    = new Registry($item->notes);
+			$item->notes = $registry->toArray();
+
+
 			// Convert the metadata field to an array.
 			$registry       = new Registry($item->metadata);
 			$item->metadata = $registry->toArray();
@@ -240,6 +245,12 @@ class CompaniesModelCompany extends AdminModel
 		if (isset($data['metadata']) && isset($data['metadata']['author']))
 		{
 			$data['metadata']['author'] = $filter->clean($data['metadata']['author'], 'TRIM');
+		}
+
+		if (isset($data['notes']) && is_array($data['notes']))
+		{
+			$registry      = new Registry($data['notes']);
+			$data['notes'] = (string) $registry;
 		}
 
 		if (isset($data['contacts']) && is_array($data['contacts']))
