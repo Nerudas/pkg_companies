@@ -28,7 +28,7 @@ use Joomla\CMS\Language\Text;
 						</div>
 					<?php endif; ?>
 					<div class="logo">
-						<a href="<?php echo $value['link']; ?>" class="image">
+						<a href="<?php echo $value['link']; ?>" target="_blank" class="image">
 							<img src="<?php echo $value['logo']; ?>" alt="<?php echo $value['name']; ?>">
 						</a>
 					</div>
