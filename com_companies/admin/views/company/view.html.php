@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Application\SiteApplication;
 
 class CompaniesViewCompany extends HtmlView
 {
@@ -119,6 +120,14 @@ class CompaniesViewCompany extends HtmlView
 				JToolbarHelper::apply('company.apply');
 				JToolbarHelper::save('company.save');
 			}
+			// Add go to page
+			JLoader::register('CompaniesHelperRoute', JPATH_SITE . '/components/com_companies/helpers/route.php');
+			$siteRouter  = SiteApplication::getRouter();
+			$companyLink = $siteRouter->build(CompaniesHelperRoute::getCompanyRoute($this->item->id))->toString();
+			$companyLink = str_replace('administrator/', '', $companyLink);
+			$toolbar     = JToolBar::getInstance('toolbar');
+			$toolbar->appendButton('Custom', '<a  href="' . $companyLink . '" class="btn btn-small btn-primary" 
+				target="_blank">' . Text::_('COM_COMPANIES_COMPANY_GO_TO_PAGE') . '</a>', 'goToPage');
 		}
 		// For all records, check the create permission.
 		if ($canDo->get('core.create'))
