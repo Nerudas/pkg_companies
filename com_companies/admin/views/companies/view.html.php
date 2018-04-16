@@ -140,7 +140,11 @@ class CompaniesViewCompanies extends HtmlView
 		{
 			JToolbarHelper::trash('companies.trash');
 		}
-
+		if ($canDo->get('core.edit'))
+		{
+			JToolbarHelper::custom('companies.toWork', 'box-add', 'toWork',
+				'COM_PROFILES_TOOLBAR_TO_WORK', true);
+		}
 		if ($user->authorise('core.admin', 'com_companies') || $user->authorise('core.options', 'com_companies'))
 		{
 			JToolbarHelper::preferences('com_companies');

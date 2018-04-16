@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fieldset>
-		<field name="name" type="text"
-			   label="COM_COMPANIES_COMPANY_NAME"
-			   class="input-xxlarge input-large-text"
-			   size="40"
-			   required="true"/>
-		<field name="alias" type="ajaxalias"
-			   label="JGLOBAL_FIELD_AJAXALIAS_LABEL"
-			   hint="JGLOBAL_FIELD_AJAXALIAS_PLACEHOLDER"
-			   size="40"/>
 		<field name="about" type="editor"
 			   label="COM_COMPANIES_COMPANY_ABOUT"
 			   hint="COM_COMPANIES_COMPANY_ABOUT"
@@ -28,6 +19,25 @@
 		<field name="employees" type="employees" label="COM_COMPANIES_EMPLOYEES"/>
 		<field name="invite" type="invite" label="COM_COMPANIES_EMPLOYEES_INVITE_LABEL"/>
 	</fieldset>
+	<fieldset name="header">
+		<field name="name" type="text"
+			   label="COM_COMPANIES_COMPANY_NAME"
+			   class="input-xxlarge input-large-text"
+			   size="40"
+			   required="true"/>
+		<field name="alias" type="ajaxalias"
+			   label="JGLOBAL_FIELD_AJAXALIAS_LABEL"
+			   hint="JGLOBAL_FIELD_AJAXALIAS_PLACEHOLDER"
+			   size="40"/>
+		<field name="in_work" type="list"
+			   default="0"
+			   label="COM_COMPANIES_COMPANY_IN_WORK"
+			   class="chzn-color-state">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+	</fieldset>
+
 	<fieldset name="global">
 		<field name="region" type="regions"
 			   label="JGLOBAL_FIELD_REGIONS_LABEL"

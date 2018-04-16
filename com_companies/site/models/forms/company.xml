@@ -106,8 +106,9 @@
 	</fieldset>
 
 	<fieldset name="hidden">
-		<field name="region" type="hidden"/>
-		<field name="state" type="hidden" default="1"/>
+		<field name="region" type="hidden" readonly="true"/>
+		<field name="state" type="hidden" readonly="true" default="1"/>
+		<field name="in_work" type="hidden" readonly="true" default="0"/>
 		<field name="access" type="hidden" readonly="true"/>
 		<fields name="attribs">
 			<field name="company_layout" type="hidden" readonly="true" useglobal="true"/>

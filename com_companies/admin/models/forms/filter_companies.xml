@@ -7,6 +7,7 @@
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
 			<option value="-2">JTRASHED</option>
+			<option value="in_work">COM_COMPANIES_COMPANY_IN_WORK</option>
 		</field>
 		<field name="access" type="accesslevel" onchange="this.form.submit();">
 			<option value="">JOPTION_SELECT_ACCESS</option>
