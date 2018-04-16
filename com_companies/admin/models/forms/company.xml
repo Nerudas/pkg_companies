@@ -46,10 +46,6 @@
 		</fields>
 	</fieldset>
 	<fieldset name="global">
-		<field name="region" type="regions"
-			   label="JGLOBAL_FIELD_REGIONS_LABEL"
-			   description="JGLOBAL_FIELD_REGIONS_DESC"
-			   show_all="true"/>
 		<field name="state" type="list"
 			   label="JSTATUS"
 			   description="JFIELD_PUBLISHED_DESC"
@@ -79,6 +75,10 @@
 			   noimage="media/com_companies/images/no-logo.png"/>
 	</fieldset>
 	<fieldset name="contacts" label="COM_COMPANIES_COMPANY_CONTACTS">
+		<field name="region" type="regions"
+			   label="JGLOBAL_FIELD_REGIONS_LABEL"
+			   description="JGLOBAL_FIELD_REGIONS_DESC"
+			   show_all="true"/>
 		<fields name="contacts">
 			<field name="phones" type="phones"
 				   label="JGLOBAL_FIELD_PHONES_LABEL"
