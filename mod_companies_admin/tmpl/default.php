@@ -29,7 +29,7 @@ HTMLHelper::_('stylesheet', 'media/mod_companies_admin/css/default.min.css', arr
 		<div class="actions ">
 			<div class="btn-group">
 				<a class="btn"
-				   href="<?php echo Route::_('index.php?option=com_board'); ?>">
+				   href="<?php echo Route::_('index.php?option=com_companies'); ?>">
 					<?php echo Text::_('MOD_COMPANIES_ADMIN_TO_COMPONENT'); ?>
 				</a>
 				<a class="btn"
