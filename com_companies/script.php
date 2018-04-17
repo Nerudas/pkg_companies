@@ -243,29 +243,4 @@ class com_CompaniesInstallerScript
 			Factory::getDbo()->updateObject('#__extensions', $object, 'extension_id');
 		}
 	}
-
-	/**
-	 * This method is called after a component is updated.
-	 *
-	 * @param  \stdClass $parent - Parent object calling object.
-	 *
-	 * @return void
-	 *
-	 * @since  1.0.1
-	 */
-	public function update($parent)
-	{
-		$db      = Factory::getDbo();
-		$columns = $db->getTableColumns('#__companies');
-		if (!isset($columns['in_work']))
-		{
-			$db->setQuery("ALTER TABLE #__companies ADD `in_work` TINYINT(3) NOT NULL DEFAULT '0' AFTER `modified`")
-				->query();
-		}
-		if (!isset($columns['notes']))
-		{
-			$db->setQuery("ALTER TABLE #__companies ADD `notes` LONGTEXT NOT NULL DEFAULT '' AFTER `header`")
-				->query();
-		}
-	}
 }
