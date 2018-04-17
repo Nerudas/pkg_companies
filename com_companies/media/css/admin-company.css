@@ -25,6 +25,7 @@
 	left: 0;
 	bottom: -43px;
 }
+
 #toolbar #toolbar-goToPage {
 	float: right;
 }
@@ -49,7 +50,8 @@
 #jform_information .logo .image {
 	display: inline-block;
 }
-#jform_information .logo  img {
+
+#jform_information .logo img {
 	max-height: 100px;
 }
 

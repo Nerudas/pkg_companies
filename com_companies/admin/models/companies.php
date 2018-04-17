@@ -186,7 +186,8 @@ class CompaniesModelCompanies extends ListModel
 		{
 			$query->where('c.state = ' . (int) $published);
 		}
-		elseif ($published == 'in_work') {
+		elseif ($published == 'in_work')
+		{
 			$query->where('c.in_work = ' . 1);
 		}
 		elseif ($published === '')

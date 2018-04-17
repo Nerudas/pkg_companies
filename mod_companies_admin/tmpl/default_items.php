@@ -63,6 +63,11 @@ $columns = 6;
 					<?php else : ?>
 						<?php echo $item->name; ?>
 					<?php endif; ?>
+					<?php if ($item->in_work): ?>
+						<sup class="label label-info">
+							<?php echo Text::_('COM_COMPANIES_COMPANY_IN_WORK'); ?>
+						</sup>
+					<?php endif; ?>
 				</div>
 			</td>
 			<td class="center">
