@@ -14,5 +14,8 @@ Thank you for your understanding.
 * **Companies Component**  
 Component for creating Companies section on the site
 
+* **Companies - Administrator Module**  
+Module for displaying information about companies in the admin panel
+
 * **Companies - Latest Module**  
 Module for displaying the latest companies

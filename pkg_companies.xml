@@ -16,6 +16,7 @@
 	</languages>
 	<files>
 		<folder type="component" id="com_companies">com_companies</folder>
+		<folder type="module" id="mod_companies_admin" client="administrator">mod_companies_admin</folder>
 		<folder type="module" id="mod_companies_latest" client="site">mod_companies_latest</folder>
 	</files>
 	<updateservers>

@@ -1,0 +1,20 @@
+/*
+ * @package    Companies - Administrator Module
+ * @version    1.0.1
+ * @author     Nerudas  - nerudas.ru
+ * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
+ * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
+ * @link       https://nerudas.ru
+ */
+
+[data-mod-companies-admin] .result {
+	display: none;
+}
+
+[data-mod-companies-admin] .actions {
+	text-align: right;
+}
+
+[data-mod-companies-admin] .table {
+	margin-bottom: 0;
+}
