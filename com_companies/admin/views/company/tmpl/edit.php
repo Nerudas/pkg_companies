@@ -14,6 +14,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
@@ -38,9 +39,7 @@ $doc->addScriptDeclaration('
 <form action="<?php echo Route::_('index.php?option=com_companies&view=company&id=' . $this->item->id); ?>"
 	  method="post"
 	  name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
-	<div class="form-inline form-inline-header">
-		<?php echo $this->form->renderFieldset('header'); ?>
-	</div>
+	<?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
 	<div class="form-horizontal">
 		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'information')); ?>
 		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'information',
