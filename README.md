@@ -1,7 +1,7 @@
 # Companies Package
 Extensions package for the site Companies section
 
-**Supported Joomla versions:** 3.8.0 or later  
+**Supported Joomla versions:** 3.8.0 and later  
 
 
 ## Internal project - No support
