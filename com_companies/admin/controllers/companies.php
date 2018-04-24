@@ -42,7 +42,7 @@ class CompaniesControllerCompanies extends AdminController
 	}
 
 	/**
-	 * Method to activate a record.
+	 * Method to set in_work to one or more records.
 	 *
 	 * @return  void
 	 *
@@ -72,6 +72,43 @@ class CompaniesControllerCompanies extends AdminController
 			else
 			{
 				$this->setMessage(Text::plural('COM_COMPANIES_N_ITEMS_IN_WORK', count($ids)));
+			}
+		}
+
+		$this->setRedirect('index.php?option=com_companies&view=companies');
+	}
+
+	/**
+	 * Method to unset in_work to one or more records.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0.1
+	 */
+	public function unWork()
+	{
+		// Check for request forgeries.
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+
+		$ids = $this->input->get('cid', array(), 'array');
+
+		if (empty($ids))
+		{
+			JError::raiseWarning(500, Text::_('COM_COMPANIES_ERROR_NO_ITEM_SELECTED'));
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Change the state of the records.
+			if (!$model->unWork($ids))
+			{
+				JError::raiseWarning(500, $model->getError());
+			}
+			else
+			{
+				$this->setMessage(Text::plural('COM_COMPANIES_N_ITEMS_UN_WORK', count($ids)));
 			}
 		}
 

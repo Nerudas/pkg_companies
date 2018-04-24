@@ -132,6 +132,13 @@ class CompaniesViewCompanies extends HtmlView
 			JToolbarHelper::publish('companies.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolbarHelper::unpublish('companies.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 		}
+		if ($canDo->get('core.edit'))
+		{
+			JToolbarHelper::custom('companies.toWork', 'box-add', 'toWork',
+				'COM_PROFILES_TOOLBAR_TO_WORK', true);
+			JToolbarHelper::custom('companies.unWork', 'box-remove', 'unWork',
+				'COM_PROFILES_TOOLBAR_UN_WORK', true);
+		}
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
 			JToolbarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'companies.delete', 'JTOOLBAR_EMPTY_TRASH');
@@ -139,11 +146,6 @@ class CompaniesViewCompanies extends HtmlView
 		elseif ($canDo->get('core.edit.state'))
 		{
 			JToolbarHelper::trash('companies.trash');
-		}
-		if ($canDo->get('core.edit'))
-		{
-			JToolbarHelper::custom('companies.toWork', 'box-add', 'toWork',
-				'COM_PROFILES_TOOLBAR_TO_WORK', true);
 		}
 		if ($user->authorise('core.admin', 'com_companies') || $user->authorise('core.options', 'com_companies'))
 		{
