@@ -183,6 +183,9 @@ class CompaniesModelCompany extends AdminModel
 				$db->setQuery($query);
 				$information['as_company'] = ($db->loadResult() > 0);
 
+				// PublishingData
+				$information['created']  = $item->created;
+				$information['modified'] = $item->modified;
 
 				if ($item->region == '*')
 				{

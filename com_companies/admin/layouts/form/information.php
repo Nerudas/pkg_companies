@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 extract($displayData);
 
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 ?>
 <div id="<?php echo $id; ?>">
@@ -37,6 +38,25 @@ use Joomla\CMS\Language\Text;
 					</div>
 					<div class="region center muted">
 						(<?php echo $value['region']; ?>)
+					</div>
+					<div class="publishing">
+						<div><strong><?php echo Text::_('JGLOBAL_FIELDSET_PUBLISHING'); ?></strong></div>
+						<dl class="dl-horizontal">
+							<dt>
+								<?php echo Text::_('JGLOBAL_FIELD_CREATED_LABEL'); ?>
+							</dt>
+							<dd>
+								<?php echo $value['created'] > 0 ? HTMLHelper::_('date', $value['created'],
+									Text::_('DATE_FORMAT_LC2')) : '-' ?>
+							</dd>
+							<dt>
+								<?php echo Text::_('JGLOBAL_FIELD_MODIFIED_LABEL'); ?>
+							</dt>
+							<dd>
+								<?php echo $value['modified'] > 0 ? HTMLHelper::_('date', $value['modified'],
+									Text::_('DATE_FORMAT_LC2')) : Text::_('JNEVER') ?>
+							</dd>
+						</dl>
 					</div>
 					<?php if (!empty($value['tags'])): ?>
 						<hr>
