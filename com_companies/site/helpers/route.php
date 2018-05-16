@@ -27,7 +27,7 @@ class CompaniesHelperRoute extends RouteHelper
 	}
 
 	/**
-	 * Fetches the profile route
+	 * Fetches the company route
 	 *
 	 * @param  int $id Company ID
 	 *
