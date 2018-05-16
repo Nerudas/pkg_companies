@@ -135,9 +135,9 @@ class CompaniesViewCompanies extends HtmlView
 		if ($canDo->get('core.edit'))
 		{
 			JToolbarHelper::custom('companies.toWork', 'box-add', 'toWork',
-				'COM_PROFILES_TOOLBAR_TO_WORK', true);
+				'COM_COMPANIES_TOOLBAR_TO_WORK', true);
 			JToolbarHelper::custom('companies.unWork', 'box-remove', 'unWork',
-				'COM_PROFILES_TOOLBAR_UN_WORK', true);
+				'COM_COMPANIES_TOOLBAR_UN_WORK', true);
 		}
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
