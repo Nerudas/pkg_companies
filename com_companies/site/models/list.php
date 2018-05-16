@@ -268,8 +268,7 @@ class CompaniesModelList extends ListModel
 						. $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
 				}
 				$number = $this->clearPhoneNumber($search);
-				echo '<pre>', print_r($number, true), '</pre>';
-				$code = '+7';
+				$code   = '+7';
 				if (!empty($number))
 				{
 					$phone         = $code . $number;
