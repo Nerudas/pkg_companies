@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `#__companies` (
   `region`      CHAR(7)          NOT NULL DEFAULT '*',
   `metadata`    MEDIUMTEXT       NOT NULL DEFAULT '',
   `tags_search` MEDIUMTEXT       NOT NULL DEFAULT '',
-  `tags_map`    LONGTEXT         NOT NULL DEFAULT '',
+  `tags_map`    MEDIUMTEXT       NOT NULL DEFAULT '',
   UNIQUE KEY `id` (`id`)
 )
   ENGINE = MyISAM
