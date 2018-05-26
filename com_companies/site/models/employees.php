@@ -104,8 +104,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 	{
 		if (!is_array($this->_items))
 		{
-			$pk   = (!empty($pk)) ? $pk : $this->getState('company.id');
-			$user = Factory::getUser();
+			$pk = (!empty($pk)) ? $pk : $this->getState('company.id');
 
 			$db    = Factory::getDbo();
 			$query = $db->getQuery(true)
@@ -113,15 +112,10 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 				->from($db->quoteName('#__companies_employees', 'ce'))
 				->join('LEFT', '#__profiles AS p ON p.id = ce.user_id')
 				->where('ce.company_id = ' . (int) $pk)
-				->where($db->quoteName('key') . ' = ' . $db->quote(''));
-
-			// Filter by access level & published
-			if (!$user->authorise('core.admin'))
-			{
-				$groups = implode(',', $user->getAuthorisedViewLevels());
-				$query->where('p.access IN (' . $groups . ')')
-					->where('( p.state = 1  OR ( p.id = ' . $user->id . ' AND p.state IN (0,1)))');;
-			}
+				->where($db->quoteName('key') . ' = ' . $db->quote(''))
+				->join('LEFT', '#__users AS user ON user.id = p.id')
+				->where('user.block = 0')
+				->where('user.activation IN (' . $db->quote('') . ', ' . $db->quote('0') . ')');
 
 			$db->setQuery($query);
 			$items = $db->loadObjectList('id');
