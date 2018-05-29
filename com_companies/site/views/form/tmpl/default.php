@@ -32,8 +32,7 @@ $doc->addScriptDeclaration('
 	};
 ');
 ?>
-<form action="<?php echo Route::_('index.php?option=com_companies&view=list&id=' . $this->item->id); ?>"
-	  method="post"
+<form action="<?php echo Route::_(CompaniesHelperRoute::getFormRoute($this->item->id)); ?>" method="post"
 	  name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 	<?php echo $this->form->renderField('name'); ?>
 	<?php echo $this->form->renderField('alias'); ?>
