@@ -14,6 +14,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Language\Text;
 
 class CompaniesControllerCompany extends FormController
 {
@@ -86,6 +87,11 @@ class CompaniesControllerCompany extends FormController
 		$result = parent::save($key, $urlVar);
 		$app    = Factory::getApplication();
 		$id     = $app->input->getInt('id');
+
+		if ($result)
+		{
+			$this->setMessage(Text::_($this->text_prefix . (($data['id'] == 0) ? '_SUBMIT' : '') . '_SAVE_SUCCESS'));
+		}
 
 		$return = ($result) ? CompaniesHelperRoute::getCompanyRoute($id) :
 			CompaniesHelperRoute::getFormRoute($id);
