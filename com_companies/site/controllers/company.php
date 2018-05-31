@@ -86,6 +86,7 @@ class CompaniesControllerCompany extends FormController
 	{
 		$result = parent::save($key, $urlVar);
 		$app    = Factory::getApplication();
+		$data   = $this->input->post->get('jform', array(), 'array');
 		$id     = $app->input->getInt('id');
 
 		if ($result)
