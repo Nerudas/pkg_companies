@@ -445,18 +445,29 @@ class CompaniesModelCompany extends AdminModel
 			// Save images
 			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
 				$this->imageFolderHelper->getItemImageFolder($id);
+
+			if ($isNew)
+			{
+				$data['logo']      = (isset($data['logo'])) ? $data['logo'] : '';
+				$data['header']    = (isset($data['header'])) ? $data['header'] : '';
+				$data['portfolio'] = (isset($data['portfolio'])) ? $data['portfolio'] : array();
+			}
+
 			if (isset($data['logo']))
 			{
 				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'logo', $data['logo']);
 			}
+
 			if (isset($data['header']))
 			{
 				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'header', $data['header']);
 			}
+
 			if (isset($data['portfolio']))
 			{
 				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'portfolio', $data['portfolio']);
 			}
+
 			// Fix alias
 			if ($data['alias'] == 'id0' || $data['alias'] == 'id')
 			{
