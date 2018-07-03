@@ -506,6 +506,20 @@ class CompaniesModelCompany extends AdminModel
 				$db->insertObject('#__companies_employees', $employee);
 			}
 
+			// Update discussion
+			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
+			$topicData               = array();
+			$topicData['context']    = 'com_companies.company';
+			$topicData['item_id']    = $id;
+			$topicData['title']      = $data['name'];
+			$topicData['text']       = '{company id="' . $id . '" layout="discussions"}';
+			$topicData['state']      = $data['state'];
+			$topicData['access']     = $data['access'];
+			$topicData['created_by'] = $data['created_by'];
+			$topicData['region']     = $data['region'];
+			$topicData['tags']       = $data['tags'];
+			DiscussionsHelperTopic::updateTopic($topicData);
+
 			return $id;
 		}
 
