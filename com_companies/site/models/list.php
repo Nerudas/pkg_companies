@@ -489,18 +489,13 @@ class CompaniesModelList extends ListModel
 		{
 			$app = Factory::getApplication();
 			$pk  = (!empty($pk)) ? (int) $pk : (int) $this->getState('tag.id', $app->input->get('id', 1));
+			$tag_id = $pk;
 
 			$root            = new stdClass();
 			$root->title     = Text::_('JGLOBAL_ROOT');
 			$root->id        = 1;
 			$root->parent_id = 0;
 			$root->link      = Route::_(CompaniesHelperRoute::getListRoute(1));
-
-			$mainTag = ComponentHelper::getParams('com_companies')->get('tags', 1);
-
-			$tag_id = ($pk > 1) ? $pk : $mainTag;
-
-			echo '<pre>', print_r($tag_id, true), '</pre>';
 
 			if ($tag_id > 1)
 			{
