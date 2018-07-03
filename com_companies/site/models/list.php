@@ -371,6 +371,10 @@ class CompaniesModelList extends ListModel
 					$item->contacts->set('phones', $phones);
 				}
 
+				// Convert the portfolio field from json.
+				$registry     = new Registry($item->portfolio);
+				$item->portfolio = $registry->toArray();
+
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_companies.company', $item->id);
