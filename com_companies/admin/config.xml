@@ -35,6 +35,12 @@
 			   extension="com_companies"
 			   view="company"/>
 	</fieldset>
+	<fieldset name="navigation" label="COM_COMPANIES_PARAMS_NAVIGATION">
+		<field name="root_title" label="COM_COMPANIES_PARAMS_ROOT_TITLE" default="COM_COMPANIES"/>
+		<field name="tags" type="advtags"
+			   label="JTAG"
+			   multiple="true"/>
+	</fieldset>
 	<fieldset name="permissions"
 			  label="JCONFIG_PERMISSIONS_LABEL"
 			  description="JCONFIG_PERMISSIONS_DESC">

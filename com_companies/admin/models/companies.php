@@ -299,6 +299,8 @@ class CompaniesModelCompanies extends ListModel
 
 		if (!empty($items))
 		{
+			$mainTags = ComponentHelper::getParams('com_companies')->get('tags');
+
 			foreach ($items as &$item)
 			{
 				$item->logo = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
@@ -307,6 +309,14 @@ class CompaniesModelCompanies extends ListModel
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_companies.company', $item->id);
+				if (!empty($item->tags->itemTags))
+				{
+					foreach ($item->tags->itemTags as &$tag)
+					{
+						$tag->main = (in_array($tag->id, $mainTags));
+					}
+					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
+				}
 			}
 		}
 

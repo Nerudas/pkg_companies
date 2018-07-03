@@ -128,6 +128,15 @@ $columns = 11;
 								</sup>
 							<?php endif; ?>
 						</div>
+						<div class="tags">
+							<?php if (!empty($item->tags->itemTags)): ?>
+								<?php foreach ($item->tags->itemTags as $tag): ?>
+									<span class="label label-<?php echo ($tag->main) ? 'success' : 'inverse' ?>">
+										<?php echo $tag->title; ?>
+									</span>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</div>
 					</td>
 					<td class="center">
 						<?php if ($item->logo): ?>
