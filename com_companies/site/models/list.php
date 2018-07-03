@@ -19,9 +19,20 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+
 
 class CompaniesModelList extends ListModel
 {
+	/**
+	 * This tag
+	 *
+	 * @var    object
+	 * @since  1.0.0
+	 */
+	protected $_tag = null;
+
+
 	/**
 	 * Constructor.
 	 *
@@ -143,6 +154,8 @@ class CompaniesModelList extends ListModel
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . serialize($this->getState('filter.published'));
+		$id .= ':' . serialize($this->getState('filter.item_id'));
+		$id .= ':' . $this->getState('filter.item_id.include');
 
 		return parent::getStoreId($id);
 	}
@@ -234,6 +247,21 @@ class CompaniesModelList extends ListModel
 				. ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('c.id')
 				. ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_companies.company'))
 				->where($db->quoteName('tagmap.tag_id') . ' = ' . $tag);
+		}
+
+		// Filter by a single or group of items.
+		$itemId = $this->getState('filter.item_id');
+		if (is_numeric($itemId))
+		{
+			$type = $this->getState('filter.item_id.include', true) ? '= ' : '<> ';
+			$query->where('с.id ' . $type . (int) $itemId);
+		}
+		elseif (is_array($itemId))
+		{
+			$itemId = ArrayHelper::toInteger($itemId);
+			$itemId = implode(',', $itemId);
+			$type   = $this->getState('filter.item_id.include', true) ? 'IN' : 'NOT IN';
+			$query->where('с.id ' . $type . ' (' . $itemId . ')');
 		}
 
 
@@ -444,5 +472,99 @@ class CompaniesModelList extends ListModel
 		$number = (int) $number;
 
 		return $number;
+	}
+
+	/**
+	 * Get the current tag
+	 *
+	 * @param null $pk
+	 *
+	 * @return object|false
+	 *
+	 * @since 1.1.0
+	 */
+	public function getTag($pk = null)
+	{
+		if (!is_object($this->_tag))
+		{
+			$app = Factory::getApplication();
+			$pk  = (!empty($pk)) ? (int) $pk : (int) $this->getState('tag.id', $app->input->get('id', 1));
+
+			$root            = new stdClass();
+			$root->title     = Text::_('JGLOBAL_ROOT');
+			$root->id        = 1;
+			$root->parent_id = 0;
+			$root->link      = Route::_(CompaniesHelperRoute::getListRoute(1));
+
+			$mainTag = ComponentHelper::getParams('com_companies')->get('tags', 1);
+
+			$tag_id = ($pk > 1) ? $pk : $mainTag;
+
+			echo '<pre>', print_r($tag_id, true), '</pre>';
+
+			if ($tag_id > 1)
+			{
+				$errorRedirect = Route::_(CompaniesHelperRoute::getListRoute(1));
+				$errorMsg      = Text::_('COM_COMPANIES_ERROR_TAG_NOT_FOUND');
+				try
+				{
+					$db    = $this->getDbo();
+					$query = $db->getQuery(true)
+						->select(array('t.id', 't.parent_id', 't.title', 'pt.title as parent_title'))
+						->from('#__tags AS t')
+						->where('t.id = ' . (int) $tag_id)
+						->join('LEFT', '#__tags AS pt ON pt.id = t.parent_id');
+
+					$user = Factory::getUser();
+					if (!$user->authorise('core.admin'))
+					{
+						$query->where('t.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
+					}
+					if (!$user->authorise('core.manage', 'com_tags'))
+					{
+						$query->where('t.published =  1');
+					}
+
+					$db->setQuery($query);
+					$data = $db->loadObject();
+
+					if (empty($data))
+					{
+						$app->redirect($url = $errorRedirect, $msg = $errorMsg, $msgType = 'error', $moved = true);
+
+						return false;
+					}
+					if ($data->id == $mainTag)
+					{
+						$root->title = $data->title;
+
+						$data = $root;
+					}
+
+
+					$data->link = Route::_(CompaniesHelperRoute::getListRoute($data->id));
+
+					$this->_tag = $data;
+				}
+				catch (Exception $e)
+				{
+					if ($e->getCode() == 404)
+					{
+						$app->redirect($url = $errorRedirect, $msg = $errorMsg, $msgType = 'error', $moved = true);
+					}
+					else
+					{
+						$this->setError($e);
+						$this->_tag = false;
+					}
+				}
+			}
+			else
+			{
+				$this->_tag = $root;
+			}
+		}
+
+		return $this->_tag;
 	}
 }

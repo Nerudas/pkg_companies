@@ -661,6 +661,31 @@ class CompaniesModelCompany extends AdminModel
 			return $response;
 		}
 
+
+		// Check tags
+		$tags = (int) ComponentHelper::getParams('com_companies')->get('tags');
+
+		if (!empty($tags) && is_array($tags))
+		{
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select('t.alias')
+				->from($db->quoteName('#__tags', 't'))
+				->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'))
+				->where('t.id IN (' . implode(',', $tags) . ')');
+
+			$db->setQuery($query);
+			$tags = $db->loadColumn();
+			if (in_array($alias, $tags))
+			{
+				$response->status = 'error';
+				$response->msg    = Text::_('COM_INFO_ERROR_ALIAS_EXIST');
+				$response->data   = $default_alias;
+
+				return $response;
+			}
+		}
+
 		return $response;
 	}
 

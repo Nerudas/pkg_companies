@@ -116,7 +116,8 @@ class CompaniesViewList extends HtmlView
 	{
 		$app = Factory::getApplication();
 
-		$this->state         = $this->get('State');
+		$this->state = $this->get('State');
+		$this->tag   = $this->get('Tag');
 		$this->link          = Route::_(CompaniesHelperRoute::getListRoute());
 		$this->addLink       = Route::_(CompaniesHelperRoute::getFormRoute());
 		$this->items         = $this->get('Items');
@@ -164,7 +165,9 @@ class CompaniesViewList extends HtmlView
 		$app      = Factory::getApplication();
 		$url      = rtrim(URI::root(), '/') . $this->link;
 		$sitename = $app->get('sitename');
+		$pathway  = $app->getPathway();
 		$menu     = $app->getMenu()->getActive();
+		$id       = (int) @$menu->query['id'];
 
 		if ($menu)
 		{
@@ -174,7 +177,25 @@ class CompaniesViewList extends HtmlView
 		{
 			$this->params->def('page_heading', Text::_('COM_COMPANIES'));
 		}
-		$title = $this->params->get('page_title', $sitename);
+
+		// If the menu item does not concern this contact
+		if ($menu && ($menu->query['option'] !== 'com_companies' || $menu->query['view'] !== 'list' || $id != $this->tag->id))
+		{
+			$path   = array();
+			$path[] = array('title' => $this->tag->title, 'link' => '');
+			foreach (array_reverse($path) as $item)
+			{
+				$pathway->addItem($item['title'], $item['link']);
+			}
+		}
+
+		// Set pathway title
+		$title = array();
+		foreach ($pathway->getPathWay() as $item)
+		{
+			$title[] = $item->name;
+		}
+		$title = implode(' / ', $title);
 
 		if ($app->get('sitename_pagetitles', 0) == 1)
 		{
