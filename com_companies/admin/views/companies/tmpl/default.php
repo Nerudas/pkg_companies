@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Companies Component
- * @version    1.0.10
+ * @version    1.1.0
  * @author     Nerudas  - nerudas.ru
  * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
  * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
@@ -163,9 +163,9 @@ $columns = 11;
 							Text::_('DATE_FORMAT_LC2')) : '-' ?>
 					</td>
 					<td class="hidden-phone center">
-							<span class="badge badge-info">
-								<?php echo (int) $item->hits; ?>
-							</span>
+						<span class="badge badge-info">
+							<?php echo (int) $item->hits; ?>
+						</span>
 					</td>
 					<td class="hidden-phone center">
 						<?php echo $item->id; ?>
