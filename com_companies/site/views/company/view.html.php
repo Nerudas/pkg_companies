@@ -63,6 +63,15 @@ class CompaniesViewCompany extends HtmlView
 	 */
 	protected $employees;
 
+	/**
+	 * Current company comments;
+	 *
+	 * @var    array
+	 *
+	 * @since 1.0.0
+	 */
+	protected $comments;
+
 
 	/**
 	 * Display the view
@@ -86,6 +95,7 @@ class CompaniesViewCompany extends HtmlView
 		$this->editLink  = $this->item->editLink;
 		$this->employees = $this->get('Employees');
 		$this->state     = $this->get('State');
+		$this->comments  = $this->get('Comments');
 		$this->user      = $user;
 
 		// Check for errors.
