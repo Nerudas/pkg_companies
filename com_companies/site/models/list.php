@@ -199,6 +199,11 @@ class CompaniesModelList extends ListModel
 			->join('LEFT', '#__regions AS r ON r.id = 
 					(CASE c.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE c.region END)');
 
+		// Join over the discussions.
+		$query->select('(CASE WHEN dt.id IS NOT NULL THEN dt.id ELSE 0 END) as discussions_topic_id')
+			->join('LEFT', '#__discussions_topics AS dt ON dt.item_id = c.id AND ' .
+				$db->quoteName('dt.context') . ' = ' . $db->quote('com_companies.company'));
+
 		// Filter by access level
 		if (!$user->authorise('core.admin'))
 		{
@@ -326,6 +331,7 @@ class CompaniesModelList extends ListModel
 		{
 			$user = Factory::getUser();
 			JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
+			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
 
 			foreach ($items as &$item)
 			{
@@ -372,12 +378,15 @@ class CompaniesModelList extends ListModel
 				}
 
 				// Convert the portfolio field from json.
-				$registry     = new Registry($item->portfolio);
+				$registry        = new Registry($item->portfolio);
 				$item->portfolio = $registry->toArray();
 
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_companies.company', $item->id);
+
+				// Discussions posts count
+				$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);
 			}
 		}
 
