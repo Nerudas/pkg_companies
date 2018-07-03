@@ -22,6 +22,11 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
+				<field name="tag_id" type="companiestags"
+					   label="JTAG"
+					   default="1"
+					   required="true"
+					   addfieldpath="/administrator/components/com_companies/models/fields"/>
 				<field name="limit" type="number" label="MOD_COMPANIES_LATEST_PARAMS_LIMIT" default="5"/>
 			</fieldset>
 			<fieldset name="advanced">
