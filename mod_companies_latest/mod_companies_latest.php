@@ -19,6 +19,10 @@ use Joomla\CMS\Router\Route;
 JLoader::register('ProfilesHelperRoute', JPATH_SITE . '/components/com_profiles/helpers/route.php');
 JLoader::register('CompaniesHelperRoute', JPATH_SITE . '/components/com_companies/helpers/route.php');
 
+// Load languages
+$language = Factory::getLanguage();
+$language->load('com_companies', JPATH_SITE, $language->getTag(), true);
+
 // Initialize model
 BaseDatabaseModel::addIncludePath(JPATH_ROOT . '/components/com_companies/models');
 $model = BaseDatabaseModel::getInstance('List', 'CompaniesModel', array('ignore_request' => true));
