@@ -23,7 +23,7 @@ echo '<pre>', print_r($this->addLink, true), '</pre>';
 ?>
 <form action="<?php echo htmlspecialchars(Factory::getURI()->toString()); ?>" method="get" name="adminForm">
 	<?php foreach ($filters as $filter): ?>
-		<?php //echo $this->filterForm->renderField(str_replace('filter_', '', $filter), 'filter'); ?>
+		<?php echo $this->filterForm->renderField(str_replace('filter_', '', $filter), 'filter'); ?>
 	<?php endforeach; ?>
 	<button type="submit"><?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?></button>
 	<a href="<?php echo $this->link; ?>"><?php echo Text::_('JCLEAR'); ?></a>

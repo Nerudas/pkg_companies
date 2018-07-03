@@ -6,9 +6,8 @@
 			   label="JGLOBAL_FIELD_REGIONS_LABEL"
 			   description="JGLOBAL_FIELD_REGIONS_DESC"
 			   layout="joomla.form.field.regions.current"/>
-		<field name="tags" type="advtags"
+		<field name="tag" type="companiestags"
 			   label="COM_COMPANIES_COMPANY_TAGS"
-			   multiple="true"
-			   root_titles="true"/>
+			   links="true"/>
 	</fields>
 </form>

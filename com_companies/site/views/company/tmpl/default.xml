@@ -8,6 +8,7 @@
 
 	<fields name="request" addfieldpath="/administrator/components/com_profiles/models/fields">
 		<fieldset name="request">
+			<field name="tag_id" type="hidden" default="1"/>
 			<field name="id" type="sql"
 				   label="COM_COMPANIES_COMPANY"
 				   query="SELECT id, name FROM #__companies"

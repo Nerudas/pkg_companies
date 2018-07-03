@@ -17,13 +17,15 @@ class CompaniesHelperRoute extends RouteHelper
 	/**
 	 * Fetches the list route
 	 *
+	 * @param  int $tag_id Item ID
+	 *
 	 * @return  string
 	 *
 	 * @since 1.0.0
 	 */
-	public static function getListRoute()
+	public static function getListRoute($tag_id = 1)
 	{
-		return 'index.php?option=com_companies&view=list&key=1';
+		return 'index.php?option=com_companies&view=list&id=' . $tag_id;
 	}
 
 	/**
@@ -37,22 +39,23 @@ class CompaniesHelperRoute extends RouteHelper
 	 */
 	public static function getCompanyRoute($id = null)
 	{
-		return 'index.php?option=com_companies&view=company&key=1&id=' . $id;
+		return 'index.php?option=com_companies&view=company&tag_id=1&id=' . $id;
 	}
 
 	/**
 	 * Fetches the form route
 	 *
-	 * @param  int $id Company ID
+	 * @param  int $id     Company ID
+	 * @param int  $tag_id Tag ID
 	 *
 	 * @return  string
 	 *
 	 * @since  1.0.0
 	 *
 	 */
-	public static function getFormRoute($id = null)
+	public static function getFormRoute($id = null, $tag_id = 1)
 	{
-		$link = 'index.php?option=com_companies&view=form&key=1';
+		$link = 'index.php?option=com_companies&view=form&tag_id=' . $tag_id;
 		if (!empty($id))
 		{
 			$link .= '&id=' . $id;

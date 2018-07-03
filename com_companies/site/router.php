@@ -16,6 +16,7 @@ use Joomla\CMS\Component\Router\RouterViewConfiguration;
 use Joomla\CMS\Component\Router\Rules\MenuRules;
 use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
+use Joomla\CMS\Component\ComponentHelper;
 
 class CompaniesRouter extends RouterView
 {
@@ -31,17 +32,17 @@ class CompaniesRouter extends RouterView
 	{
 		// List route
 		$list = new RouterViewConfiguration('list');
-		$list->setKey('key');
+		$list->setKey('id')->setNestable();
 		$this->registerView($list);
 
 		// Form route
 		$form = new RouterViewConfiguration('form');
-		$form->setKey('key')->setParent($list, 'key');
+		$form->setKey('tag_id')->setParent($list, 'tag_id');
 		$this->registerView($form);
 
 		// Company route
 		$company = new RouterViewConfiguration('company');
-		$company->setKey('id')->setParent($list, 'key');
+		$company->setKey('id')->setParent($list, 'tag_id');
 		$this->registerView($company);
 
 		parent::__construct($app, $menu);
@@ -63,7 +64,24 @@ class CompaniesRouter extends RouterView
 	 */
 	public function getListSegment($id, $query)
 	{
-		return array(1 => 1);
+		$path = array();
+		if ($id > 0)
+		{
+			$db      = Factory::getDbo();
+			$dbquery = $db->getQuery(true)
+				->select(array('id', 'alias', 'parent_id'))
+				->from('#__tags')
+				->where('id =' . $id);
+			$db->setQuery($dbquery);
+			$tag = $db->loadObject();
+			if ($tag)
+			{
+				$path[$tag->id] = $tag->alias;
+			}
+		}
+		$path[1] = 'root';
+
+		return $path;
 	}
 
 	/**
@@ -123,7 +141,25 @@ class CompaniesRouter extends RouterView
 	 */
 	public function getListId($segment, $query)
 	{
-		return 1;
+		if (isset($query['id']))
+		{
+			$tags = ComponentHelper::getParams('com_companies')->get('tags');
+			// Get tags
+			if (!empty($tags) && is_array($tags))
+			{
+				$db      = Factory::getDbo();
+				$dbquery = $db->getQuery(true)
+					->select('t.id')
+					->from($db->quoteName('#__tags', 't'))
+					->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'))
+					->where('t.id IN (' . implode(',', $tags) . ')')
+					->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
+				$db->setQuery($dbquery);
+				$id = $db->loadResult();
+				return (!empty($id)) ? $id : false;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -138,6 +174,7 @@ class CompaniesRouter extends RouterView
 	 */
 	public function getFormId($segment, $query)
 	{
+
 		if (in_array($segment, array('form', 'add', 'edit')))
 		{
 			return 1;

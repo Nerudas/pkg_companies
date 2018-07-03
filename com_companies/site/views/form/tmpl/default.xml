@@ -8,7 +8,7 @@
 
 	<fields name="request" addfieldpath="/administrator/components/com_companies/models/fields">
 		<fieldset name="request">
-			<field name="key" type="hidden" default="1"/>
+			<field name="tag_id" type="hidden" default="1"/>
 		</fieldset>
 	</fields>
 

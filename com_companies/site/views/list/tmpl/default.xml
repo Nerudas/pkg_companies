@@ -8,7 +8,11 @@
 
 	<fields name="request" addfieldpath="/administrator/components/com_companies/models/fields">
 		<fieldset name="request">
-			<field name="key" type="hidden" default="1"/>
+			<field name="id" type="companiestags"
+				   label="JTAG"
+				   default="1"
+				   required="true">
+			</field>
 		</fieldset>
 	</fields>
 

@@ -78,6 +78,10 @@ class CompaniesModelList extends ListModel
 		$app  = Factory::getApplication();
 		$user = Factory::getUser();
 
+		// Set id state
+		$pk = $app->input->getInt('id', 1);
+		$this->setState('tag.id', $pk);
+
 		// Load the parameters. Merge Global and Menu Item params into new object
 		$params     = $app->getParams();
 		$menuParams = new Registry;
@@ -106,9 +110,6 @@ class CompaniesModelList extends ListModel
 
 		$region = $this->getUserStateFromRequest($this->context . '.filter.region', 'filter_region', '');
 		$this->setState('filter.region', $region);
-
-		$tags = $this->getUserStateFromRequest($this->context . '.filter.tags', 'filter_tags', '');
-		$this->setState('filter.tags', $tags);
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -142,7 +143,6 @@ class CompaniesModelList extends ListModel
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . serialize($this->getState('filter.published'));
-		$id .= ':' . serialize($this->getState('filter.tags'));
 
 		return parent::getStoreId($id);
 	}
@@ -226,6 +226,17 @@ class CompaniesModelList extends ListModel
 			}
 		}
 
+		// Filter by tag.
+		$tag = (int) $this->getState('tag.id');
+		if ($tag > 1)
+		{
+			$query->join('LEFT', $db->quoteName('#__contentitem_tag_map', 'tagmap')
+				. ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('c.id')
+				. ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_companies.company'))
+				->where($db->quoteName('tagmap.tag_id') . ' = ' . $tag);
+		}
+
+
 		// Filter by regions
 		$region = $this->getState('filter.region');
 		if (is_numeric($region))
@@ -239,20 +250,6 @@ class CompaniesModelList extends ListModel
 			$query->where($db->quoteName('c.region') . ' IN (' . implode(',', $regions) . ')');
 		}
 
-		// Filter by tags.
-		$tags = $this->getState('filter.tags');
-		if (is_array($tags))
-		{
-			$tags = ArrayHelper::toInteger($tags);
-			$tags = implode(',', $tags);
-			if (!empty($tags))
-			{
-				$query->join('LEFT', $db->quoteName('#__contentitem_tag_map', 'tagmap')
-					. ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('c.id')
-					. ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_companies.company'))
-					->where($db->quoteName('tagmap.tag_id') . ' IN (' . $tags . ')');
-			}
-		}
 
 		// Filter by search.
 		$search = $this->getState('filter.search');
