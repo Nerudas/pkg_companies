@@ -261,7 +261,7 @@ class CompaniesModelList extends ListModel
 			$itemId = ArrayHelper::toInteger($itemId);
 			$itemId = implode(',', $itemId);
 			$type   = $this->getState('filter.item_id.include', true) ? 'IN' : 'NOT IN';
-			$query->where('с.id ' . $type . ' (' . $itemId . ')');
+			$query->where('c.id ' . $type . ' (' . $itemId . ')');
 		}
 
 
