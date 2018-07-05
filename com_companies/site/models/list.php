@@ -14,7 +14,6 @@ use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
@@ -172,15 +171,8 @@ class CompaniesModelList extends ListModel
 	 */
 	public function getFilterForm($data = array(), $loadData = true)
 	{
-		$component = ComponentHelper::getParams('com_companies');
 		if ($form = parent::getFilterForm())
 		{
-			// Set tags Filter
-			if ($component->get('company_tags', 0))
-			{
-				$form->setFieldAttribute('tags', 'parents', implode(',', $component->get('company_tags')), 'filter');
-			}
-
 			$params = $this->getState('params');
 			if ($params->get('search_placeholder', ''))
 			{
