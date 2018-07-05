@@ -679,7 +679,7 @@ class CompaniesModelCompany extends AdminModel
 			if (in_array($alias, $tags))
 			{
 				$response->status = 'error';
-				$response->msg    = Text::_('COM_INFO_ERROR_ALIAS_EXIST');
+				$response->msg    = Text::_('COM_COMPANIES_ERROR_ALIAS_EXIST');
 				$response->data   = $default_alias;
 
 				return $response;

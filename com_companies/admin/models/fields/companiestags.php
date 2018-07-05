@@ -46,7 +46,7 @@ class JFormFieldCompaniesTags extends JFormFieldList
 
 		// Root
 		$root        = new stdClass();
-		$root->text  = Text::_($params->get('root_title', 'COM_INFO'));
+		$root->text  = Text::_($params->get('root_title', 'COM_COMPANIES'));
 		$root->value = 1;
 		if ($this->value == $root->value)
 		{
