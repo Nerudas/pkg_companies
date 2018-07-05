@@ -351,7 +351,7 @@ class CompaniesModelList extends ListModel
 			JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
 			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
 
-			$mainTags = ComponentHelper::getParams('com_companies')->get('tags');
+			$mainTags = ComponentHelper::getParams('com_companies')->get('tags', array());
 
 			foreach ($items as &$item)
 			{

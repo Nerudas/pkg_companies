@@ -299,7 +299,7 @@ class CompaniesModelCompanies extends ListModel
 
 		if (!empty($items))
 		{
-			$mainTags = ComponentHelper::getParams('com_companies')->get('tags');
+			$mainTags = ComponentHelper::getParams('com_companies')->get('tags', array());
 
 			foreach ($items as &$item)
 			{
