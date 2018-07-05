@@ -177,6 +177,8 @@ class CompaniesModelList extends ListModel
 			{
 				$form->setFieldAttribute('search', 'hint', $params->get('search_placeholder'), 'filter');
 			}
+
+			$form->setValue('tag', 'filter', $this->getState('tag.id', 1));
 		}
 
 		return $form;
@@ -488,8 +490,8 @@ class CompaniesModelList extends ListModel
 	{
 		if (!is_object($this->_tag))
 		{
-			$app = Factory::getApplication();
-			$pk  = (!empty($pk)) ? (int) $pk : (int) $this->getState('tag.id', $app->input->get('id', 1));
+			$app    = Factory::getApplication();
+			$pk     = (!empty($pk)) ? (int) $pk : (int) $this->getState('tag.id', $app->input->get('id', 1));
 			$tag_id = $pk;
 
 			$root            = new stdClass();
