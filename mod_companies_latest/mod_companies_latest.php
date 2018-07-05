@@ -40,7 +40,7 @@ else
 
 // Variables
 $items    = $model->getItems();
-$listLink = Route::_(CompaniesHelperRoute::getListRoute());
+$listLink = Route::_(CompaniesHelperRoute::getListRoute($params->get('tag_id', 1)));
 $addLink  = Route::_(CompaniesHelperRoute::getFormRoute());
 
 require ModuleHelper::getLayoutPath($module->module, $params->get('layout', 'default'));
