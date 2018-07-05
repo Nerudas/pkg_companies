@@ -18,3 +18,8 @@
 #adminForm td {
 	vertical-align: middle;
 }
+
+#adminForm .tags .label {
+	margin-right: 3px;
+	margin-bottom: 3px;
+}
