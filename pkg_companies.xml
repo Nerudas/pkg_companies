@@ -18,6 +18,7 @@
 		<folder type="component" id="com_companies">com_companies</folder>
 		<folder type="module" id="mod_companies_admin" client="administrator">mod_companies_admin</folder>
 		<folder type="module" id="mod_companies_latest" client="site">mod_companies_latest</folder>
+		<folder type="module" id="mod_companies_tags" client="site">mod_companies_tags</folder>
 	</files>
 	<updateservers>
 		<server type="extension" priority="1" name="Companies Package">
