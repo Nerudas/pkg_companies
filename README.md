@@ -22,3 +22,6 @@ Module for displaying the latest companies
 
 * **Companies - Tags Module**  
 Module for displaying companies tags
+
+* **System - Companies Shortcodes Plugin**  
+Plugin for displaying companies via shortcodes
