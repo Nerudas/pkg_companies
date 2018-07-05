@@ -31,7 +31,7 @@ $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 
-$columns = 11;
+$columns = 12;
 
 ?>
 
@@ -55,6 +55,9 @@ $columns = 11;
 				</th>
 				<th style="min-width:100px" class="nowrap">
 					<?php echo HTMLHelper::_('searchtools.sort', 'COM_COMPANIES_COMPANY_NAME', 'c.name', $listDirn, $listOrder); ?>
+				</th>
+				<th class="nowrap">
+					<?php echo Text::_('COM_COMPANIES_COMPANY_NOTES_NOTE'); ?>
 				</th>
 				<th width="10%" class="nowrap hidden-phone center">
 					<?php echo Text::_('COM_COMPANIES_COMPANY_LOGO'); ?>
@@ -128,15 +131,9 @@ $columns = 11;
 								</sup>
 							<?php endif; ?>
 						</div>
-						<div class="tags">
-							<?php if (!empty($item->tags->itemTags)): ?>
-								<?php foreach ($item->tags->itemTags as $tag): ?>
-									<span class="label label-<?php echo ($tag->main) ? 'success' : 'inverse' ?>">
-										<?php echo $tag->title; ?>
-									</span>
-								<?php endforeach; ?>
-							<?php endif; ?>
-						</div>
+					</td>
+					<td>
+						<div><?php echo $item->note; ?></div>
 					</td>
 					<td class="center">
 						<?php if ($item->logo): ?>

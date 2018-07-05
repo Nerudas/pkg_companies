@@ -15,6 +15,7 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 class CompaniesModelCompanies extends ListModel
 {
@@ -307,6 +308,9 @@ class CompaniesModelCompanies extends ListModel
 			{
 				$item->logo = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
 					Uri::root(true) . '/' . $item->logo : false;
+
+				$notes      = new Registry($item->notes);
+				$item->note = $notes->get('note');
 
 				// Get Tags
 				$item->tags = new TagsHelper;
