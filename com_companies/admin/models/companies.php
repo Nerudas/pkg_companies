@@ -233,13 +233,15 @@ class CompaniesModelCompanies extends ListModel
 			}
 			else
 			{
-				$text_columns = array('c.name', 'c.about', 'c.contacts', 'c.requisites', 'c.tags_search', 'r.name', 'ua.name');
+				$text_columns = array('c.name', 'c.about', 'c.contacts', 'c.requisites', 'c.notes', 'c.tags_search', 'r.name', 'ua.name');
 
 				$sql = array();
 				foreach ($text_columns as $column)
 				{
+					$searchText = ($column == 'c.notes') ? str_replace('"', '', json_encode($search)) : $search;
+
 					$sql[] = $db->quoteName($column) . ' LIKE '
-						. $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+						. $db->quote('%' . str_replace(' ', '%', $db->escape(trim($searchText), true) . '%'));
 				}
 				$number = $this->clearPhoneNumber($search);
 				$code   = '+7';
