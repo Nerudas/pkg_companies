@@ -529,13 +529,6 @@ class CompaniesModelList extends ListModel
 
 						return false;
 					}
-					if ($data->id == $mainTag)
-					{
-						$root->title = $data->title;
-
-						$data = $root;
-					}
-
 
 					$data->link = Route::_(CompaniesHelperRoute::getListRoute($data->id));
 
