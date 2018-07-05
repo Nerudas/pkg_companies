@@ -19,7 +19,7 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
-
+use Joomla\CMS\Component\ComponentHelper;
 
 class CompaniesModelList extends ListModel
 {
@@ -30,7 +30,6 @@ class CompaniesModelList extends ListModel
 	 * @since  1.0.0
 	 */
 	protected $_tag = null;
-
 
 	/**
 	 * Constructor.
@@ -350,6 +349,8 @@ class CompaniesModelList extends ListModel
 			JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
 			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
 
+			$mainTags = ComponentHelper::getParams('com_companies')->get('tags');
+
 			foreach ($items as &$item)
 			{
 				$item->logo = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
@@ -401,6 +402,14 @@ class CompaniesModelList extends ListModel
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_companies.company', $item->id);
+				if (!empty($item->tags->itemTags))
+				{
+					foreach ($item->tags->itemTags as &$tag)
+					{
+						$tag->main = (in_array($tag->id, $mainTags));
+					}
+					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
+				}
 
 				// Discussions posts count
 				$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);
