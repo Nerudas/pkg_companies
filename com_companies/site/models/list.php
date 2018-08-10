@@ -117,9 +117,6 @@ class CompaniesModelList extends ListModel
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$region = $this->getUserStateFromRequest($this->context . '.filter.region', 'filter_region', '');
-		$this->setState('filter.region', $region);
-
 		// List state information.
 		parent::populateState($ordering, $direction);
 
@@ -150,7 +147,6 @@ class CompaniesModelList extends ListModel
 	protected function getStoreId($id = '')
 	{
 		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . serialize($this->getState('filter.published'));
 		$id .= ':' . serialize($this->getState('filter.item_id'));
 		$id .= ':' . $this->getState('filter.item_id.include');
@@ -201,9 +197,8 @@ class CompaniesModelList extends ListModel
 			->from($db->quoteName('#__companies', 'c'));
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name AS region_name'))
-			->join('LEFT', '#__regions AS r ON r.id = 
-					(CASE c.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE c.region END)');
+		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+			->join('LEFT', '#__location_regions AS r ON r.id = c.region');
 
 		// Join over the discussions.
 		$query->select('(CASE WHEN dt.id IS NOT NULL THEN dt.id ELSE 0 END) as discussions_topic_id')
@@ -256,21 +251,6 @@ class CompaniesModelList extends ListModel
 			$type   = $this->getState('filter.item_id.include', true) ? 'IN' : 'NOT IN';
 			$query->where('c.id ' . $type . ' (' . $itemId . ')');
 		}
-
-
-		// Filter by regions
-		$region = $this->getState('filter.region');
-		if (is_numeric($region))
-		{
-			JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_nerudas/models');
-			$regionModel = JModelLegacy::getInstance('regions', 'NerudasModel');
-			$regions     = $regionModel->getRegionsIds($region);
-			$regions[]   = $db->quote('*');
-			$regions[]   = $regionModel->getRegion($region)->parent;
-			$regions     = array_unique($regions);
-			$query->where($db->quoteName('c.region') . ' IN (' . implode(',', $regions) . ')');
-		}
-
 
 		// Filter by search.
 		$search = $this->getState('filter.search');
@@ -411,6 +391,15 @@ class CompaniesModelList extends ListModel
 						$tag->main = (in_array($tag->id, $mainTags));
 					}
 					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
+				}
+				
+				// Get region
+				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
+					Uri::root(true) . $item->region_icon : false;
+				if ($item->region == '*')
+				{
+					$item->region_icon = false;
+					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
 				}
 
 				// Discussions posts count

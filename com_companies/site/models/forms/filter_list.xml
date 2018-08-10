@@ -2,10 +2,6 @@
 <form>
 	<fields name="filter">
 		<field name="search" type="text" hint="JSEARCH_FILTER"/>
-		<field name="region" type="regions"
-			   label="JGLOBAL_FIELD_REGIONS_LABEL"
-			   description="JGLOBAL_FIELD_REGIONS_DESC"
-			   layout="joomla.form.field.regions.current"/>
 		<field name="tag" type="companiestags"
 			   label="COM_COMPANIES_COMPANY_TAGS"
 			   links="true"/>
