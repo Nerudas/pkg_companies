@@ -76,8 +76,9 @@
 	<fieldset name="contacts" label="COM_COMPANIES_COMPANY_CONTACTS">
 		<field name="region" type="regions"
 			   label="JGLOBAL_FIELD_REGIONS_LABEL"
-			   description="JGLOBAL_FIELD_REGIONS_DESC"
-			   show_all="true"/>
+			   description="JGLOBAL_FIELD_REGIONS_DESC">
+			<option value="">JGLOBAL_FIELD_REGIONS_NULL</option>
+		</field>
 		<fields name="contacts">
 			<field name="phones" type="phones"
 				   label="JGLOBAL_FIELD_PHONES_LABEL"
