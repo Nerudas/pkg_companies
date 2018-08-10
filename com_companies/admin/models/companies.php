@@ -16,6 +16,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Language\Text;
 
 class CompaniesModelCompanies extends ListModel
 {
@@ -170,9 +171,8 @@ class CompaniesModelCompanies extends ListModel
 			->join('LEFT', '#__viewlevels AS ag ON ag.id = c.access');
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name AS region_name'))
-			->join('LEFT', '#__regions AS r ON r.id = 
-					(CASE c.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE c.region END)');
+		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+			->join('LEFT', '#__location_regions AS r ON r.id = c.region');
 
 		// Filter by access level.
 		$access = $this->getState('filter.access');
@@ -323,6 +323,15 @@ class CompaniesModelCompanies extends ListModel
 					}
 					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
 				}
+			}
+
+			// Get region
+			$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
+				Uri::root(true) . $item->region_icon : false;
+			if ($item->region == '*')
+			{
+				$item->region_icon = false;
+				$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
 			}
 		}
 
