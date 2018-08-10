@@ -108,10 +108,8 @@ class CompaniesModelCompany extends ItemModel
 					->where('c.id = ' . (int) $pk);
 
 				// Join over the regions.
-				$query->select(array('r.id as region_id', 'r.name AS region_name', 'r.latitude as region_latitude',
-					'r.longitude as region_longitude', 'r.zoom as region_zoom'))
-					->join('LEFT', '#__regions AS r ON r.id = 
-					(CASE c.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE c.region END)');
+				$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+					->join('LEFT', '#__location_regions AS r ON r.id = c.region');
 
 				// Join over the discussions.
 				$query->select('(CASE WHEN dt.id IS NOT NULL THEN dt.id ELSE 0 END) as discussions_topic_id')
@@ -206,6 +204,16 @@ class CompaniesModelCompany extends ItemModel
 				// Get Tags
 				$data->tags = new TagsHelper;
 				$data->tags->getItemTags('com_companies.company', $data->id);
+
+
+				// Get region
+				$data->region_icon = (!empty($data->region_icon) && JFile::exists(JPATH_ROOT . '/' . $data->region_icon)) ?
+					Uri::root(true) . $data->region_icon : false;
+				if ($data->region == '*')
+				{
+					$data->region_icon = false;
+					$data->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
+				}
 
 				// Convert parameter fields to objects.
 				$registry     = new Registry($data->attribs);
