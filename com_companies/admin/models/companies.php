@@ -200,7 +200,7 @@ class CompaniesModelCompanies extends ListModel
 		$region = $this->getState('filter.region');
 		if (!empty($region))
 		{
-			$query->where($db->quoteName('c.region') . ' = ' . $db->quoteName($region));
+			$query->where($db->quoteName('c.region') . ' = ' . $db->quote($region));
 		}
 
 		// Filter by tags.
