@@ -196,17 +196,11 @@ class CompaniesModelCompanies extends ListModel
 			$query->where('(c.state = 0 OR c.state = 1)');
 		}
 
-		// Filter by regions
+		// Filter by region
 		$region = $this->getState('filter.region');
-		if (is_numeric($region))
+		if (!empty($region))
 		{
-			JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_nerudas/models');
-			$regionModel = JModelLegacy::getInstance('regions', 'NerudasModel');
-			$regions     = $regionModel->getRegionsIds($region);
-			$regions[]   = $db->quote('*');
-			$regions[]   = $regionModel->getRegion($region)->parent;
-			$regions     = array_unique($regions);
-			$query->where($db->quoteName('c.region') . ' IN (' . implode(',', $regions) . ')');
+			$query->where($db->quoteName('c.region') . ' = ' . $db->quoteName($region));
 		}
 
 		// Filter by tags.
