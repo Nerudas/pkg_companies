@@ -196,7 +196,7 @@ class CompaniesModelCompany extends AdminModel
 				{
 					$query = $db->getQuery(true)
 						->select('name')
-						->from('#__regions')
+						->from('#__location_regions')
 						->where('id = ' . $item->region);
 					$db->setQuery($query);
 					$region                = $db->loadResult();
