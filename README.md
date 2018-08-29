@@ -25,3 +25,6 @@ Module for displaying companies tags
 
 * **System - Companies Shortcodes Plugin**  
 Plugin for displaying companies via shortcodes
+
+* **Sitemap - Companies Plugin**  
+Plugin for adding the Companies section to sitemap
