@@ -18,7 +18,6 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Table\Table;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class CompaniesModelCompany extends ItemModel
@@ -108,7 +107,7 @@ class CompaniesModelCompany extends ItemModel
 					->where('c.id = ' . (int) $pk);
 
 				// Join over the regions.
-				$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+				$query->select(array('r.id as region_id', 'r.name as region_name'))
 					->join('LEFT', '#__location_regions AS r ON r.id = c.region');
 
 				// Join over the discussions.
@@ -186,34 +185,24 @@ class CompaniesModelCompany extends ItemModel
 				// Convert the requisites field from json.
 				$data->requisites = new Registry($data->requisites);
 
-				// Convert the portfolio field to an array.
+				$imagesHelper = new FieldTypesFilesHelper();
+				$imagesFolder = 'images/companies/' . $data->id;
+				$data->logo   = $imagesHelper->getImage('logo', $imagesFolder, false, false);
+				$data->header = $imagesHelper->getImage('header', $imagesFolder, 'media/com_companies/images/no-header.jpg', false);
+
+				// Convert the images field to an array.
 				$registry        = new Registry($data->portfolio);
 				$data->portfolio = $registry->toArray();
-
-				$data->logo = (!empty($data->logo) && JFile::exists(JPATH_ROOT . '/' . $data->logo)) ?
-					Uri::root(true) . '/' . $data->logo : false;
-
-				$header = (!empty($data->header) && JFile::exists(JPATH_ROOT . '/' . $data->header)) ?
-					$data->header : 'media/com_companies/images/no-header.jpg';
-
-				$data->header = Uri::root(true) . '/' . $header;
+				$data->portfolio = $imagesHelper->getImages('portfolio', $imagesFolder, $data->portfolio,
+					array('text' => true, 'for_field' => false));
 
 				// Convert the metadata field
 				$data->metadata = new Registry($data->metadata);
+				$data->metadata->set('image', $imagesHelper->getImage('meta', $imagesFolder, false, false));
 
 				// Get Tags
 				$data->tags = new TagsHelper;
 				$data->tags->getItemTags('com_companies.company', $data->id);
-
-
-				// Get region
-				$data->region_icon = (!empty($data->region_icon) && JFile::exists(JPATH_ROOT . '/' . $data->region_icon)) ?
-					Uri::root(true) . $data->region_icon : false;
-				if ($data->region == '*')
-				{
-					$data->region_icon = false;
-					$data->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
-				}
 
 				// Convert parameter fields to objects.
 				$registry     = new Registry($data->attribs);

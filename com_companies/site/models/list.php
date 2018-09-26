@@ -13,13 +13,14 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Component\ComponentHelper;
+
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
 class CompaniesModelList extends ListModel
 {
@@ -49,8 +50,6 @@ class CompaniesModelList extends ListModel
 				'c.about', 'about',
 				'c.contacts', 'contacts',
 				'c.requisites', 'requisites',
-				'c.logo', 'logo',
-				'c.header', 'header',
 				'c.portfolio', 'portfolio',
 				'c.state', 'state',
 				'c.created', 'created',
@@ -197,7 +196,7 @@ class CompaniesModelList extends ListModel
 			->from($db->quoteName('#__companies', 'c'));
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+		$query->select(array('r.id as region_id', 'r.name as region_name'))
 			->join('LEFT', '#__location_regions AS r ON r.id = c.region');
 
 		// Join over the discussions.
@@ -331,12 +330,13 @@ class CompaniesModelList extends ListModel
 			JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
 			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
 
-			$mainTags = ComponentHelper::getParams('com_companies')->get('tags', array());
+			$mainTags     = ComponentHelper::getParams('com_companies')->get('tags', array());
+			$imagesHelper = new FieldTypesFilesHelper();
 
 			foreach ($items as &$item)
 			{
-				$item->logo = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
-					Uri::root(true) . '/' . $item->logo : false;
+				$imageFolder = 'images/companies/' . $item->id;
+				$item->logo  = $imagesHelper->getImage('logo', $imageFolder, false, false);
 
 				$item->link     = Route::_(CompaniesHelperRoute::getCompanyRoute($item->id));
 				$item->editLink = false;
@@ -377,9 +377,11 @@ class CompaniesModelList extends ListModel
 					$item->contacts->set('phones', $phones);
 				}
 
-				// Convert the portfolio field from json.
+				// Convert the images field to an array.
 				$registry        = new Registry($item->portfolio);
 				$item->portfolio = $registry->toArray();
+				$item->portfolio = $imagesHelper->getImages('portfolio', $imageFolder, $item->portfolio,
+					array('text' => true, 'for_field' => false));
 
 				// Get Tags
 				$item->tags = new TagsHelper;
@@ -392,15 +394,10 @@ class CompaniesModelList extends ListModel
 					}
 					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
 				}
-				
+
 				// Get region
-				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
-					Uri::root(true) . $item->region_icon : false;
-				if ($item->region == '*')
-				{
-					$item->region_icon = false;
-					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
-				}
+				$item->region_icon = $imagesHelper->getImage('icon', 'images/location/regions/' . $item->region_id, false, false);
+
 
 				// Discussions posts count
 				$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);

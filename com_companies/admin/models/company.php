@@ -365,6 +365,12 @@ class CompaniesModelCompany extends AdminModel
 			$data['contacts'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
+		if (isset($data['portfolio']) && is_array($data['portfolio']))
+		{
+			$registry           = new Registry($data['portfolio']);
+			$data['portfolio'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
+		}
+
 		if (isset($data['requisites']) && is_array($data['requisites']))
 		{
 			$registry           = new Registry($data['requisites']);

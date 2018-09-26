@@ -16,6 +16,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Component\ComponentHelper;
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
 class CompaniesModelEmployees extends BaseDatabaseModel
 {
@@ -108,7 +109,7 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 
 			$db    = Factory::getDbo();
 			$query = $db->getQuery(true)
-				->select(array('ce.user_id as id', 'ce.position', 'p.name', 'p.avatar'))
+				->select(array('ce.user_id as id', 'ce.position', 'p.name'))
 				->from($db->quoteName('#__companies_employees', 'ce'))
 				->join('LEFT', '#__profiles AS p ON p.id = ce.user_id')
 				->where('ce.company_id = ' . (int) $pk)
@@ -121,13 +122,13 @@ class CompaniesModelEmployees extends BaseDatabaseModel
 			$items = $db->loadObjectList('id');
 
 			JLoader::register('ProfilesHelperRoute', JPATH_SITE . '/components/com_profiles/helpers/route.php');
+
+			$imagesHelper = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
-				$item->link = Route::_(ProfilesHelperRoute::getProfileRoute($item->id));
-
-				$avatar       = (!empty($item->avatar) && JFile::exists(JPATH_ROOT . '/' . $item->avatar)) ?
-					$item->avatar : 'media/com_profiles/images/no-avatar.jpg';
-				$item->avatar = Uri::root(true) . '/' . $avatar;
+				$item->link   = Route::_(ProfilesHelperRoute::getProfileRoute($item->id));
+				$item->avatar = $imagesHelper->getImage('avatar', 'images/profiles/' . $item->id,
+					'media/com_profiles/images/no-avatar.jpg', false);
 			}
 
 			$this->_items = $items;

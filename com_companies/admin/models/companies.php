@@ -170,7 +170,7 @@ class CompaniesModelCompanies extends ListModel
 			->join('LEFT', '#__viewlevels AS ag ON ag.id = c.access');
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+		$query->select(array('r.id as region_id', 'r.name as region_name'))
 			->join('LEFT', '#__location_regions AS r ON r.id = c.region');
 
 		// Filter by access level.
