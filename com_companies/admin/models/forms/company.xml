@@ -19,13 +19,14 @@
 			   label="JTAG"
 			   multiple="true"
 			   root_titles="true"/>
-		<field name="portfolio" type="ajaximage"
+		<field name="portfolio" type="images"
 			   label="COM_COMPANIES_COMPANY_PORTFOLIO"
-			   multiple="true"
-			   unique="true"
-			   limit="10"
+			   folder_field="images_folder"
+			   folder="portfolio"
 			   text="true"
-			   subfolder="portfolio"/>
+			   unique="true"
+			   limit="10"/>
+
 		<field name="employees" type="employees" label="COM_COMPANIES_EMPLOYEES"/>
 		<field name="invite" type="invite" label="COM_COMPANIES_EMPLOYEES_INVITE_LABEL"/>
 		<field name="information" type="information" label="COM_COMPANIES_COMPANY_INFORMATION"/>
@@ -63,13 +64,16 @@
 	</fieldset>
 
 	<fieldset name="images" label="COM_COMPANIES_COMPANY_IMAGES">
-		<field name="imagefolder" type="imagefolder" path="images/companies"/>
-		<field name="header" type="ajaximage"
+		<field name="images_folder" type="folder"
+			   label="JGLOBAL_FIELD_IMAGES_FOLDER_LABEL"/>
+		<field name="header" type="image"
 			   label="COM_COMPANIES_COMPANY_HEADER"
+			   folder_field="images_folder"
 			   filename="header"
 			   noimage="media/com_companies/images/no-header.jpg"/>
-		<field name="logo" type="ajaximage"
+		<field name="logo" type="image"
 			   label="COM_COMPANIES_COMPANY_LOGO"
+			   folder_field="images_folder"
 			   filename="logo"
 			   noimage="media/com_companies/images/no-logo.png"/>
 	</fieldset>

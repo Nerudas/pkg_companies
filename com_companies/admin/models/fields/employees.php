@@ -137,7 +137,7 @@ class JFormFieldEmployees extends FormField
 		{
 			$db    = Factory::getDbo();
 			$query = $db->getQuery(true)
-				->select(array('ce.user_id as id', 'ce.position', 'p.name', 'p.avatar', 'ce.key', 'ce.as_company'))
+				->select(array('ce.user_id as id', 'ce.position', 'p.name', 'ce.key', 'ce.as_company'))
 				->from($db->quoteName('#__companies_employees', 'ce'))
 				->join('LEFT', '#__profiles AS p ON p.id = ce.user_id')
 				->where('ce.company_id = ' . (int) $this->company_id);
@@ -149,8 +149,9 @@ class JFormFieldEmployees extends FormField
 			JLoader::register('ProfilesHelperRoute', JPATH_SITE . '/components/com_profiles/helpers/route.php');
 			foreach ($employees as &$employee)
 			{
-				$avatar           = (!empty($employee->avatar) && JFile::exists(JPATH_ROOT . '/' . $employee->avatar)) ?
-					$employee->avatar : 'media/com_profiles/images/no-avatar.jpg';
+				$imagesHelper     = new FieldTypesFilesHelper();
+				$avatar           = $imagesHelper->getImage('avatar', 'images/profiles/' . $employee->id,
+					'media/com_profiles/images/no-avatar.jpg', false);
 				$employee->avatar = Uri::root(true) . '/' . $avatar;
 
 				$employee->confirm = CompaniesHelperEmployees::keyCheck($employee->key, $this->company_id, $employee->id);

@@ -27,14 +27,13 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 class CompaniesModelCompany extends AdminModel
 {
 	/**
-	 * Imagefolder helper helper
+	 * Images root path
 	 *
-	 * @var    new imageFolderHelper
+	 * @var    string
 	 *
-	 * @since  1.0.0
+	 * @since  1.2.0
 	 */
-	protected $imageFolderHelper = null;
-
+	protected $images_root = 'images/companies';
 
 	/**
 	 * Profile information
@@ -44,24 +43,6 @@ class CompaniesModelCompany extends AdminModel
 	 * @since 1.0.1
 	 */
 	protected $_information = null;
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 *
-	 * @see     AdminModel
-	 *
-	 * @since   1.0.0
-	 */
-	public function __construct($config = array())
-	{
-		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-		$this->imageFolderHelper = new imageFolderHelper('images/companies');
-
-		parent::__construct($config);
-	}
 
 	/**
 	 * Method to get a single record.
@@ -135,8 +116,9 @@ class CompaniesModelCompany extends AdminModel
 				$link                = $siteRouter->build(CompaniesHelperRoute::getCompanyRoute($item->id))->toString();
 				$information['link'] = str_replace('administrator/', '', $link);
 
-				$information['logo'] = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
-					Uri::root(true) . '/' . $item->logo : false;
+				$imagesHelper        = new FieldTypesFilesHelper();
+				$logo                = $imagesHelper->getImage('logo', $this->images_root . '/' . $item->id, false, false);
+				$information['logo'] = Uri::root(true) . '/' . $logo;
 
 
 				$contacts = (!empty($item->contacts)) ? $item->contacts : array();
@@ -271,6 +253,7 @@ class CompaniesModelCompany extends AdminModel
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_companies.company.' . (int) $id)))
 		{
 			// Disable fields for display.
+			// Disable fields for display.
 			$form->setFieldAttribute('state', 'disabled', 'true');
 
 			// Disable fields while saving.
@@ -282,12 +265,8 @@ class CompaniesModelCompany extends AdminModel
 		$form->setFieldAttribute('alias', 'checkurl',
 			Uri::base(true) . '/index.php?option=com_companies&task=company.checkAlias');
 
-		// Set update images links
-		$saveurl = Uri::base(true) . '/index.php?option=com_companies&task=company.updateImages&id='
-			. $id . '&field=';
-		$form->setFieldAttribute('logo', 'saveurl', $saveurl . 'logo');
-		$form->setFieldAttribute('header', 'saveurl', $saveurl . 'header');
-		$form->setFieldAttribute('portfolio', 'saveurl', $saveurl . 'portfolio');
+		// Set images folder root
+		$form->setFieldAttribute('images_folder', 'root', $this->images_root);
 
 		// Set Tags parents
 		$config = ComponentHelper::getParams('com_companies');
@@ -375,31 +354,31 @@ class CompaniesModelCompany extends AdminModel
 		if (isset($data['notes']) && is_array($data['notes']))
 		{
 			$registry      = new Registry($data['notes']);
-			$data['notes'] = (string) $registry;
+			$data['notes'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		if (isset($data['contacts']) && is_array($data['contacts']))
 		{
 			$registry         = new Registry($data['contacts']);
-			$data['contacts'] = (string) $registry;
+			$data['contacts'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		if (isset($data['requisites']) && is_array($data['requisites']))
 		{
 			$registry           = new Registry($data['requisites']);
-			$data['requisites'] = (string) $registry;
+			$data['requisites'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		if (isset($data['attribs']) && is_array($data['attribs']))
 		{
 			$registry        = new Registry($data['attribs']);
-			$data['attribs'] = (string) $registry;
+			$data['attribs'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		if (isset($data['metadata']) && is_array($data['metadata']))
 		{
 			$registry         = new Registry($data['metadata']);
-			$data['metadata'] = (string) $registry;
+			$data['metadata'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		if (empty($data['created_by']))
@@ -453,29 +432,10 @@ class CompaniesModelCompany extends AdminModel
 			$id = $this->getState($this->getName() . '.id');
 
 			// Save images
-			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
-				$this->imageFolderHelper->getItemImageFolder($id);
-
-			if ($isNew)
+			if ($isNew && !empty($data['images_folder']))
 			{
-				$data['logo']      = (isset($data['logo'])) ? $data['logo'] : '';
-				$data['header']    = (isset($data['header'])) ? $data['header'] : '';
-				$data['portfolio'] = (isset($data['portfolio'])) ? $data['portfolio'] : array();
-			}
-
-			if (isset($data['logo']))
-			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'logo', $data['logo']);
-			}
-
-			if (isset($data['header']))
-			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'header', $data['header']);
-			}
-
-			if (isset($data['portfolio']))
-			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__companies', 'portfolio', $data['portfolio']);
+				$filesHelper = new FieldTypesFilesHelper();
+				$filesHelper->moveTemporaryFolder($data['images_folder'], $id, $this->images_root);
 			}
 
 			// Fix alias
@@ -556,10 +516,12 @@ class CompaniesModelCompany extends AdminModel
 				->where($db->quoteName('company_id') . ' IN (' . implode(',', $pks) . ')');
 			$db->setQuery($query)->execute();
 
+			$filesHelper = new FieldTypesFilesHelper();
+
 			// Delete images
 			foreach ($pks as $pk)
 			{
-				$this->imageFolderHelper->deleteItemImageFolder($pk);
+				$filesHelper->deleteItemFolder($pk, $this->images_root);
 			}
 
 			return true;
