@@ -303,7 +303,6 @@ class CompaniesModelCompanies extends ListModel
 				$logo       = $imagesHelper->getImage('logo', 'images/companies/' . $item->id, false, false);
 				$item->logo = ($logo) ? Uri::root(true) . '/' . $logo : false;
 
-
 				$notes      = new Registry($item->notes);
 				$item->note = $notes->get('note');
 
