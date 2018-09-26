@@ -39,8 +39,6 @@ class CompaniesModelCompanies extends ListModel
 				'c.about', 'about',
 				'c.contacts', 'contacts',
 				'c.requisites', 'requisites',
-				'c.logo', 'logo',
-				'c.header', 'header',
 				'c.portfolio', 'portfolio',
 				'c.state', 'state',
 				'c.created', 'created',
