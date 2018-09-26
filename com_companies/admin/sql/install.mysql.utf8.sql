@@ -5,8 +5,6 @@ CREATE TABLE IF NOT EXISTS `#__companies` (
   `about`       LONGTEXT         NOT NULL DEFAULT '',
   `contacts`    MEDIUMTEXT       NOT NULL DEFAULT '',
   `requisites`  MEDIUMTEXT       NOT NULL DEFAULT '',
-  `logo`        TEXT             NOT NULL DEFAULT '',
-  `header`      TEXT             NOT NULL DEFAULT '',
   `notes`       LONGTEXT         NOT NULL DEFAULT '',
   `portfolio`   LONGTEXT         NOT NULL DEFAULT '',
   `state`       TINYINT(3)       NOT NULL DEFAULT '0',

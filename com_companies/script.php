@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\Registry\Registry;
 
 class com_CompaniesInstallerScript
 {
@@ -241,6 +242,74 @@ class com_CompaniesInstallerScript
 			$object->extension_id = $component->id;
 			$object->params       = (string) $params;
 			Factory::getDbo()->updateObject('#__extensions', $object, 'extension_id');
+		}
+	}
+
+	/**
+	 * Remove categories
+	 *
+	 * @param  \stdClass $parent - Parent object calling object.
+	 *
+	 * @return void
+	 *
+	 * @since  1.2.0
+	 */
+	public function update($parent)
+	{
+		$db      = Factory::getDbo();
+		$table   = '#__companies';
+		$columns = $db->getTableColumns($table);
+
+		// Remove logo
+		if (isset($columns['logo']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP logo")->query();
+		}
+		// Remove header
+		if (isset($columns['header']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP header")->query();
+		}
+
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName($table));
+		$db->setQuery($query);
+		$items = $db->loadObjectList();
+		foreach ($items as $item)
+		{
+			$registry  = new Registry($item->portfolio);
+			$images    = $registry->toArray();
+			$newImages = array();
+
+			$updateImages = false;
+			foreach ($images as $image)
+			{
+				if (!isset($image['ordering']))
+				{
+					$updateImages              = true;
+					$newImage                  = new stdClass();
+					$newImage->text            = $image['text'];
+					$newImage->ordering        = count($newImages) + 1;
+					$newImages[$image['file']] = $newImage;
+				}
+			}
+			if ($updateImages)
+			{
+				$registry        = new Registry($newImages);
+				$item->portfolio = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+			}
+
+			$registry    = new Registry($item->notes);
+			$item->notes = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$registry       = new Registry($item->contacts);
+			$item->contacts = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$registry         = new Registry($item->requisites);
+			$item->requisites = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$db->updateObject($table, $item, array('id'));
 		}
 	}
 }
