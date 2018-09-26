@@ -24,6 +24,8 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class CompaniesModelCompany extends AdminModel
 {
 	/**

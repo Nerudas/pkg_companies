@@ -16,7 +16,8 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Language\Text;
+
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
 class CompaniesModelCompanies extends ListModel
 {
@@ -233,10 +234,8 @@ class CompaniesModelCompanies extends ListModel
 				$sql = array();
 				foreach ($text_columns as $column)
 				{
-					$searchText = ($column == 'c.notes') ? str_replace('"', '', json_encode($search)) : $search;
-
 					$sql[] = $db->quoteName($column) . ' LIKE '
-						. $db->quote('%' . str_replace(' ', '%', $db->escape(trim($searchText), true) . '%'));
+						. $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
 				}
 				$number = $this->clearPhoneNumber($search);
 				$code   = '+7';
@@ -296,12 +295,14 @@ class CompaniesModelCompanies extends ListModel
 
 		if (!empty($items))
 		{
-			$mainTags = ComponentHelper::getParams('com_companies')->get('tags', array());
+			$mainTags     = ComponentHelper::getParams('com_companies')->get('tags', array());
+			$imagesHelper = new FieldTypesFilesHelper();
 
 			foreach ($items as &$item)
 			{
-				$item->logo = (!empty($item->logo) && JFile::exists(JPATH_ROOT . '/' . $item->logo)) ?
-					Uri::root(true) . '/' . $item->logo : false;
+				$logo       = $imagesHelper->getImage('logo', 'images/companies/' . $item->id, false, false);
+				$item->logo = ($logo) ? Uri::root(true) . '/' . $logo : false;
+
 
 				$notes      = new Registry($item->notes);
 				$item->note = $notes->get('note');
@@ -319,14 +320,6 @@ class CompaniesModelCompanies extends ListModel
 				}
 			}
 
-			// Get region
-			$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
-				Uri::root(true) . $item->region_icon : false;
-			if ($item->region == '*')
-			{
-				$item->region_icon = false;
-				$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
-			}
 		}
 
 		return $items;
