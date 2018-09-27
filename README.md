@@ -28,3 +28,6 @@ Plugin for displaying companies via shortcodes
 
 * **Sitemap - Companies Plugin**  
 Plugin for adding the Companies section to sitemap
+
+* **Content - Tags Companies Metadata Plugin**  
+Plugin for adding metadata fields in com_tags

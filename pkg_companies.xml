@@ -21,6 +21,7 @@
 		<folder type="module" id="mod_companies_tags" client="site">mod_companies_tags</folder>
 		<folder type="plugin" id="companies_shortcodes" group="system">plg_system_companies_shortcodes</folder>
 		<folder type="plugin" id="companies" group="sitemap">plg_sitemap_companies</folder>
+		<folder type="plugin" id="tags_companies_meta" group="content">plg_content_tags_companies_meta</folder>
 	</files>
 	<updateservers>
 		<server type="extension" priority="1" name="Companies Package">

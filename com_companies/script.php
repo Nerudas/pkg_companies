@@ -50,6 +50,12 @@ class com_CompaniesInstallerScript
 			JFolder::create($folder);
 			JFile::write($folder . '/index.html', '<!DOCTYPE html><title></title>');
 		}
+		$folder = JPATH_ROOT . '/images/companies/tags';
+		if (!JFolder::exists($folder))
+		{
+			JFolder::create($folder);
+			JFile::write($folder . '/index.html', '<!DOCTYPE html><title></title>');
+		}
 	}
 
 	/**
