@@ -147,9 +147,11 @@ class JFormFieldEmployees extends FormField
 
 			JLoader::register('CompaniesHelperEmployees', JPATH_SITE . '/components/com_companies/helpers/employees.php');
 			JLoader::register('ProfilesHelperRoute', JPATH_SITE . '/components/com_profiles/helpers/route.php');
+			JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
+			$imagesHelper = new FieldTypesFilesHelper();
 			foreach ($employees as &$employee)
 			{
-				$imagesHelper     = new FieldTypesFilesHelper();
 				$avatar           = $imagesHelper->getImage('avatar', 'images/profiles/' . $employee->id,
 					'media/com_profiles/images/no-avatar.jpg', false);
 				$employee->avatar = Uri::root(true) . '/' . $avatar;
